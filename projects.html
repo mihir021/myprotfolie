@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Case Files & Technical Archives — Mihir Rathod</title>
+    <meta name="description" content="Complete engineering dossier of all 11 production systems, smart contracts, and developer tools architected by Mihir Rathod.">
+    
+    <!-- Google Web Fonts: Playfair Display, Newsreader, Space Mono, Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,600&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,600;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Main Broadsheet & Loader Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/loader.css">
+    <noscript><style>#gate-container,.newsprint-texture-layer{display:none!important}</style></noscript>
+</head>
+<body class="newspaper-body projects-archive-page">
+
+    <!-- SPLIT GATE DOORS: Left Wall & Right Wall with Spider Dual-Canvas -->
+    <div id="gate-container" class="gate-container" aria-hidden="true">
+        <div id="gate-door-left" class="gate-door left-door">
+            <canvas id="canvas-left" class="door-canvas left-canvas"></canvas>
+        </div>
+        <div id="gate-door-right" class="gate-door right-door">
+            <canvas id="canvas-right" class="door-canvas right-canvas"></canvas>
+        </div>
+        <div id="gate-center-seam" class="gate-center-seam">
+            <div class="seam-laser-beam"></div>
+            <div class="seam-spark-head top-cutter"></div>
+            <div class="seam-spark-head bottom-cutter"></div>
+            <div class="seam-indicator top-indicator">[ 0x50 // ARCHIVE_TRANSIT ]</div>
+            <div class="seam-indicator bottom-indicator">[ UNLATCH_READY ]</div>
+        </div>
+    </div>
+
+    <!-- Vintage Newsprint Background Texture Layer -->
+    <div class="newsprint-texture-layer" aria-hidden="true"></div>
+
+    <main class="main-content newspaper-theme">
+
+        <!-- Top Editorial Masthead Banner -->
+        <div class="newspaper-top-bar">
+            <span class="news-tag">AHMEDABAD, INDIA</span>
+            <span class="news-edition">COMPLETE CASE FILE ARCHIVE · 11 REGISTERED WORKS</span>
+            <span class="news-est">EST. 2024 · VOL. IV</span>
+        </div>
+
+        <!-- Classic Editorial Masthead -->
+        <header class="newspaper-masthead">
+            <h1 class="masthead-title">Mihir Rathod</h1>
+            <p class="masthead-tagline">THE COMPLETE TECHNICAL RECORD & PROJECT DOSSIER</p>
+
+            <!-- Dateline Strip with Double Rules -->
+            <div class="newspaper-dateline">
+                <div id="dateline-date" class="dateline-item">WEDNESDAY 26 AUGUST 2026</div>
+                <div class="dateline-divider">·</div>
+                <div class="dateline-item">11 REGISTERED CASE FILES</div>
+                <div class="dateline-divider">·</div>
+                <div class="dateline-item">SORTED BY ENGINEERING COMPLEXITY</div>
+                <div class="dateline-divider">·</div>
+                <div class="dateline-item">PRICE: ONE COFFEE</div>
+            </div>
+        </header>
+
+        <!-- Editorial Secondary Sticky Navigation -->
+        <nav class="newspaper-nav" id="sticky-newspaper-nav">
+            <div class="nav-brand">
+                <a href="index.html" class="nav-brand-link nav-back-brand">← FRONT PAGE</a>
+            </div>
+            <div class="nav-links">
+                <a href="index.html#stack" class="news-nav-link">SYSTEMS</a>
+                <a href="index.html#dossier" class="news-nav-link">DISPATCHES</a>
+                <a href="index.html#credentials" class="news-nav-link">CREDENTIALS</a>
+                <a href="index.html#contact" class="news-nav-link">CONTACT</a>
+                <a href="index.html#contact" class="news-btn-hire">HIRE HIM</a>
+            </div>
+        </nav>
+
+        <!-- Section Banner -->
+        <section class="section-banner">
+            <div class="section-header-row">
+                <h2 class="section-title">All Registered Case Files</h2>
+                <span class="section-case-tag">ARCHIVE CLASSIFICATION: 01 TO 11 // COMPLEXITY ORDERED</span>
+            </div>
+            <p class="section-sub">
+                A complete chronological and architectural record of all systems engineered by Mihir Rathod — ordered systematically from distributed multi-tenant platforms and blockchain escrow protocols to developer tooling and algorithmic engines.
+            </p>
+            <div class="header-rule-double"></div>
+        </section>
+
+        <!-- Projects Archive Grid Container -->
+        <div id="projects-list-container" class="projects-archive-feed">
+            <!-- Dynamically Populated from js/case-files-data.js -->
+        </div>
+
+        <!-- Broadsheet Footer -->
+        <footer class="newspaper-footer">
+            <div class="footer-rule-double"></div>
+            
+            <div class="footer-main-row">
+                <!-- Left Column: Brand Info & Direct Email Dispatch Block -->
+                <div class="footer-left-col">
+                    <div class="footer-masthead-title">Mihir Rathod</div>
+                    <div class="footer-masthead-tagline">COMPLETE TECHNICAL RECORD & ARCHIVE DOSSIER</div>
+                    
+                    <div class="footer-dispatch-block">
+                        <span class="footer-dispatch-label">DIRECT DISPATCH:</span>
+                        <a href="mailto:rathodmihir1113@gmail.com" class="footer-email-link">rathodmihir1113@gmail.com ✉</a>
+                    </div>
+                </div>
+
+                <!-- Right Column: Directory Navigation -->
+                <div class="footer-right-col">
+                    <div class="footer-nav-header">
+                        <span class="footer-nav-label">ARCHIVE DIRECTORY // INDEX</span>
+                        <span class="footer-nav-serial">[ 11_WORKS ]</span>
+                    </div>
+                    <nav class="footer-nav-grid" aria-label="Footer Archive Directory">
+                        <a href="index.html" class="footer-nav-item">← FRONT PAGE</a>
+                        <a href="projects.html" class="footer-nav-item footer-archive-item">ALL ARCHIVES</a>
+                        <a href="index.html#stack" class="footer-nav-item">SYSTEMS</a>
+                        <a href="index.html#dossier" class="footer-nav-item">DISPATCHES</a>
+                        <a href="index.html#credentials" class="footer-nav-item">CREDENTIALS</a>
+                        <a href="index.html#contact" class="footer-nav-item">CONTACT DESK</a>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="footer-sub-rule"></div>
+
+            <div class="footer-colophon">
+                <span class="footer-copy">© 2026 MIHIR RATHOD · ALL CASE FILES INDEXED & VERIFIED</span>
+                <span class="footer-credit">PRINTED IN AHMEDABAD, GUJARAT</span>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- Scripts: Dual-Canvas Spider & Transition Engine -->
+    <script src="js/engine/ascii-grid.js"></script>
+    <script src="js/engine/spider.js"></script>
+    <script src="js/case-files-data.js"></script>
+    <script src="js/page-transition.js"></script>
+    <script>
+        (function() {
+            // Update Dynamic Date
+            const datelineDateEl = document.getElementById('dateline-date');
+            if (datelineDateEl) {
+                const now = new Date();
+                const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+                const months = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
+                datelineDateEl.textContent = `${days[now.getDay()]} ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+            }
+
+            const container = document.getElementById('projects-list-container');
+            if (!container) return;
+
+            container.innerHTML = ALL_CASE_FILES.map((item, index) => `
+                <article class="archive-project-card" id="archive-${item.id}">
+                    <div class="archive-card-header">
+                        <div class="archive-badge-wrap">
+                            <span class="complexity-pill">${item.complexity}</span>
+                            <span class="archive-exhibit-num">EXHIBIT NO. ${item.exhibitNum}</span>
+                        </div>
+                        <h3 class="archive-project-title">
+                            <a href="case-file.html?id=${item.id}" class="archive-title-link">${item.title}</a>
+                        </h3>
+                        <p class="archive-project-headline">“${item.headline}”</p>
+                    </div>
+
+                    <div class="archive-card-body ${!item.img ? 'no-img-layout' : ''}">
+                        ${item.img ? `
+                        <div class="archive-preview-col">
+                            <a href="case-file.html?id=${item.id}" class="archive-img-link" aria-label="View case file for ${item.title}">
+                                <div class="archive-img-frame">
+                                    <div class="tape-strip"></div>
+                                    <img src="${item.img}" alt="${item.title}" class="archive-preview-img" loading="lazy">
+                                </div>
+                            </a>
+                        </div>` : ''}
+                        
+                        <div class="archive-details-col">
+                            <p class="archive-summary-text">${item.summary}</p>
+                            
+                            <div class="archive-quote-snippet">
+                                <em>${item.quote}</em>
+                            </div>
+
+                            <div class="archive-tech-pills">
+                                ${item.tags.map(tag => `<span class="tech-pill">${tag}</span>`).join('')}
+                            </div>
+
+                            <div class="archive-action-row">
+                                <a href="case-file.html?id=${item.id}" class="btn-newspaper-primary archive-btn">
+                                    OPEN CASE FILE ↵
+                                </a>
+                                <a href="${item.liveUrl}" target="_blank" rel="noopener" class="btn-newspaper-secondary archive-btn">
+                                    ${item.liveUrl.includes('github.com') ? 'VIEW REPOSITORY ↗' : 'VISIT LIVE SITE ↗'}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+        })();
+    </script>
+</body>
+</html>

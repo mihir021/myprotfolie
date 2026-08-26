@@ -1,0 +1,354 @@
+/**
+ * ============================================================================
+ * LOADER.CSS - SPIDER LOADING SCREEN & SPLIT-WALL GATE ANIMATION
+ * ============================================================================
+ * Dual-Door Wall Split System:
+ * When loading completes, the screen splits vertically down the center.
+ * The left wall carries the left half of the spider, and the right wall carries
+ * the right half of the spider as both doors slide open smoothly to reveal content.
+ */
+
+/* -------------------------------------------------------------------------- */
+/* 1. SPLIT-WALL GATE CONTAINER & DUAL DOORS                                  */
+/* -------------------------------------------------------------------------- */
+.gate-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999999;
+    pointer-events: none;
+    overflow: hidden;
+    perspective: 1200px;
+    -webkit-perspective: 1200px;
+}
+
+/* Individual Door Panels (Left Wall: 0-50%, Right Wall: 50-100%) */
+.gate-door {
+    position: absolute;
+    top: 0;
+    width: 50vw;
+    height: 100vh;
+    overflow: hidden;
+    background: var(--bg-primary);
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translate3d(0, 0, 0);
+    /* Hydraulic Closing Curve (Swift start, soft pneumatic cushion) */
+    transition: transform 0.72s cubic-bezier(0.32, 0.72, 0, 1), box-shadow 0.5s ease;
+    box-shadow: none; /* No shadow when closed - 100% seamless unbroken canvas */
+    border: none;
+}
+
+.gate-door.left-door {
+    left: 0;
+    transform: translateX(0);
+}
+
+.gate-door.right-door {
+    left: 50vw;
+    right: auto;
+    transform: translateX(0);
+}
+
+/* Canvases inside doors: Full-width rendering with 50% clipping per door */
+.door-canvas {
+    position: absolute;
+    top: 0;
+    width: 100vw !important;
+    height: 100vh !important;
+    pointer-events: none;
+    background: transparent;
+}
+
+.door-canvas.left-canvas {
+    left: 0;
+}
+
+.door-canvas.right-canvas {
+    left: -50vw; /* Shifts canvas by 50vw so the right half aligns seamlessly with right-door */
+}
+
+/* ========================================================================= */
+/* KINETIC LASER SEAM CUTTER SYSTEM (Black Precision Slicing)                */
+/* ========================================================================= */
+.gate-center-seam {
+    position: absolute;
+    top: 0;
+    left: calc(50vw - 1px);
+    width: 2px;
+    height: 100vh;
+    z-index: 1000000;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s;
+}
+
+/* Base Laser Beam Channel */
+.seam-laser-beam {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 100vh;
+    background: #14151e;
+    box-shadow: 0 0 10px rgba(20, 21, 30, 0.4), 0 0 2px rgba(0, 0, 0, 0.9);
+    transform: scaleY(0);
+    transform-origin: center;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Traveling Spark Cutters (Burst outward from Spider Center at 50%) */
+.seam-spark-head {
+    position: absolute;
+    left: -4px;
+    width: 10px;
+    height: 10px;
+    background: #ffffff;
+    border: 2px solid #14151e;
+    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(20, 21, 30, 0.8), 0 0 4px #ffffff;
+    opacity: 0;
+    transform: scale(0);
+    transition: top 0.5s cubic-bezier(0.16, 1, 0.3, 1), bottom 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s ease, opacity 0.25s ease;
+}
+
+.seam-spark-head.top-cutter {
+    top: 50vh;
+}
+
+.seam-spark-head.bottom-cutter {
+    bottom: 50vh;
+}
+
+/* Monospace HUD Indicators at Top and Bottom */
+.seam-indicator {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #14151e;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid var(--border-subtle);
+    border-radius: 3px;
+    padding: 3px 8px;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    opacity: 0;
+    transition: opacity 0.3s ease 0.18s, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.18s;
+}
+
+.seam-indicator.top-indicator {
+    top: 24px;
+    transform: translateX(-50%) translateY(-8px);
+}
+
+.seam-indicator.bottom-indicator {
+    bottom: 24px;
+    transform: translateX(-50%) translateY(8px);
+}
+
+/* ========================================================================= */
+/* PULSE SEAM ACTIVE STATE (Spark Heads Slice Outward)                       */
+/* ========================================================================= */
+.gate-container.pulse-seam .gate-center-seam {
+    opacity: 1;
+    visibility: visible;
+}
+
+.gate-container.pulse-seam .seam-laser-beam {
+    transform: scaleY(1);
+}
+
+.gate-container.pulse-seam .seam-spark-head.top-cutter {
+    top: 0vh;
+    opacity: 1;
+    transform: scale(1);
+}
+
+.gate-container.pulse-seam .seam-spark-head.bottom-cutter {
+    bottom: 0vh;
+    opacity: 1;
+    transform: scale(1);
+}
+
+.gate-container.pulse-seam .seam-indicator {
+    opacity: 1;
+}
+
+.gate-container.pulse-seam .seam-indicator.top-indicator {
+    transform: translateX(-50%) translateY(0);
+}
+
+.gate-container.pulse-seam .seam-indicator.bottom-indicator {
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Mechanical Unlatch Nudge (2px pressure release before wide open) */
+.gate-container.unlatched .gate-door.left-door {
+    transform: translateX(-3px);
+}
+
+.gate-container.unlatched .gate-door.right-door {
+    transform: translateX(3px);
+}
+
+/* ========================================================================= */
+/* OPEN DOORS STATE: Left Wall -> Left, Right Wall -> Right                  */
+/* ========================================================================= */
+.gate-container.open-doors .gate-door {
+    /* Expansive Pneumatic Glide Outward */
+    transition: transform 0.96s cubic-bezier(0.16, 1, 0.28, 1), box-shadow 0.6s ease;
+}
+
+.gate-container.open-doors .gate-door.left-door {
+    transform: translate3d(-100%, 0, 0);
+    box-shadow: 8px 0 35px rgba(0, 0, 0, 0.14);
+}
+
+.gate-container.open-doors .gate-door.right-door {
+    transform: translate3d(100%, 0, 0);
+    box-shadow: -8px 0 35px rgba(0, 0, 0, 0.14);
+}
+
+.gate-container.open-doors .gate-center-seam {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* -------------------------------------------------------------------------- */
+/* 2. LOADER OVERLAY HUD & BUTTONS                                            */
+/* -------------------------------------------------------------------------- */
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999998;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 24px 32px;
+    background: transparent;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: none; /* Allows canvas pass-through */
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.loader-overlay.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    z-index: 35;
+    pointer-events: auto;
+}
+
+.loader-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.badge-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent-spider);
+    border-radius: 50%;
+    box-shadow: 0 0 6px var(--accent-spider-glow);
+    animation: pulseDot 1.4s ease-in-out infinite alternate;
+}
+
+@keyframes pulseDot {
+    0% { transform: scale(0.8); opacity: 0.7; }
+    100% { transform: scale(1.25); opacity: 1; }
+}
+
+/* Skip Button */
+.skip-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    background: #ffffff;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all var(--transition-fast);
+}
+
+.skip-btn:hover {
+    background: var(--accent-spider);
+    color: #ffffff;
+    border-color: var(--accent-spider);
+    box-shadow: 0 4px 14px var(--accent-spider-glow);
+    transform: translateY(-1px);
+}
+
+.skip-key {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 3px;
+    color: var(--text-secondary);
+}
+
+.skip-btn:hover .skip-key {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    border-color: transparent;
+}
+
+.loader-center-stage {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+}
+
+.spider-stage-anchor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* -------------------------------------------------------------------------- */
+/* 3. RESPONSIVE QUERIES                                                      */
+/* -------------------------------------------------------------------------- */
+@media (max-width: 600px) {
+    .loader-overlay {
+        padding: 16px;
+    }
+}

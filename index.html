@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Character encoding and responsive viewport settings -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Mihir Rathod — Full-Stack Engineer & Systems Craftsman. Portfolio featuring multi-tenant SaaS, blockchain infrastructure, AI/ML pipelines, and devops architectures.">
+    <title>Mihir Rathod // The Personal Record & Gazette</title>
+
+    <!-- Google Fonts: Newsreader (Editorial Serif), Space Mono (Monospace), Outfit (Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,400;1,6..72,500;1,6..72,600;1,6..72,700&family=Outfit:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/loader.css">
+    <noscript><style>#gate-container,.loader-overlay,.crt-overlay{display:none!important}.main-content.hidden{display:block!important;opacity:1!important;transform:none!important;pointer-events:auto!important}</style></noscript>
+</head>
+<body class="light-mode">
+
+    <!-- ========================================================================= -->
+    <!-- SPLIT GATE DOORS: Left Wall & Right Wall (Seamless During Load)            -->
+    <!-- ========================================================================= -->
+    <div id="gate-container" class="gate-container" aria-hidden="true">
+        <!-- Left Wall Door (Holds Left Half of Spider & Background) -->
+        <div id="gate-door-left" class="gate-door left-door">
+            <canvas id="canvas-left" class="door-canvas left-canvas"></canvas>
+        </div>
+
+        <!-- Right Wall Door (Holds Right Half of Spider & Background) -->
+        <div id="gate-door-right" class="gate-door right-door">
+            <canvas id="canvas-right" class="door-canvas right-canvas"></canvas>
+        </div>
+
+        <!-- High-Tech Precision Laser Seam Cut Line -->
+        <div id="gate-center-seam" class="gate-center-seam">
+            <div class="seam-laser-beam"></div>
+            <div class="seam-spark-head top-cutter"></div>
+            <div class="seam-spark-head bottom-cutter"></div>
+            <div class="seam-indicator top-indicator">[ 0x50 // AXIS_SPLIT ]</div>
+            <div class="seam-indicator bottom-indicator">[ UNLATCH_READY ]</div>
+        </div>
+    </div>
+
+    <!-- Subtle Ambient Vignette Overlay -->
+    <div class="crt-overlay" aria-hidden="true"></div>
+
+    <!-- ========================================================================= -->
+    <!-- 1. LOADING SCREEN OVERLAY (HUD: Badge + Skip Button)                       -->
+    <!-- ========================================================================= -->
+    <div id="loader-overlay" class="loader-overlay" role="progressbar" aria-label="System Initializing" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+        
+        <!-- Header Bar: System Tag + Instant Skip Button -->
+        <header class="loader-header">
+            <div class="loader-badge">
+                <span class="badge-dot"></span>
+                <span class="badge-text" id="sys-status-badge">SYS://LOADING</span>
+            </div>
+            <button id="skip-btn" class="skip-btn" title="Skip loading sequence (Press ESC)" aria-label="Skip Intro Animation">
+                <span class="skip-label">SKIP INTRO</span>
+                <span class="skip-key">ESC</span>
+            </button>
+        </header>
+
+        <!-- Center Stage: Reference Anchor -->
+        <main class="loader-center-stage">
+            <div class="spider-stage-anchor" id="spider-stage-anchor"></div>
+        </main>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 2. EDITORIAL NEWSPAPER PORTFOLIO (Revealed behind opening split walls)     -->
+    <!-- ========================================================================= -->
+    <div id="main-content" class="main-content newspaper-theme hidden" aria-hidden="true">
+        
+        <!-- Top Editorial Masthead Banner -->
+        <div class="newspaper-top-bar">
+            <span class="news-tag">AHMEDABAD, INDIA</span>
+            <span class="news-edition">THE INVESTIGATION EDITION · MARVEL TECH ARCHIVES</span>
+            <span class="news-est">EST. 2024 · VOL. IV</span>
+        </div>
+
+        <!-- Classic Editorial Masthead -->
+        <header class="newspaper-masthead">
+            <h1 class="masthead-title">Mihir Rathod</h1>
+            <p class="masthead-tagline">THE PERSONAL RECORD OF A FULL-STACK SOFTWARE CRAFTSMAN</p>
+
+            <!-- Dateline Strip with Double Rules -->
+            <div class="newspaper-dateline">
+                <div id="dateline-date" class="dateline-item">WEDNESDAY 26 AUGUST 2026</div>
+                <div class="dateline-divider">·</div>
+                <div id="dateline-gssoc" class="dateline-item">GSSOC TOP 1% (#372/47,951)</div>
+                <div class="dateline-divider">·</div>
+                <div class="dateline-item">SELECTED WORKS & ARCHIVES</div>
+                <div class="dateline-divider">·</div>
+                <div class="dateline-item">PRICE: ONE COFFEE</div>
+            </div>
+        </header>
+
+        <!-- Editorial Secondary Sticky Navigation (Pinned across whole page) -->
+        <nav class="newspaper-nav" id="sticky-newspaper-nav">
+            <div class="nav-brand"><a href="index.html" class="nav-brand-link">Mihir Rathod</a></div>
+            <div class="nav-links">
+                <a href="#work" class="news-nav-link">EXHIBITS</a>
+                <a href="#stack" class="news-nav-link">SYSTEMS</a>
+                <a href="#dossier" class="news-nav-link">DISPATCHES</a>
+                <a href="#credentials" class="news-nav-link">CREDENTIALS</a>
+                <a href="#contact" class="news-nav-link">CONTACT</a>
+                <a href="#contact" class="news-btn-hire">HIRE HIM</a>
+            </div>
+        </nav>
+
+        <!-- ===================================================================== -->
+        <!-- FRONTPAGE HERO STORY (Lead Column & Right Dossier)                    -->
+        <!-- ===================================================================== -->
+        <section class="newspaper-frontpage">
+            
+            <div class="frontpage-meta-bar">
+                <span class="meta-tag">FRONT PAGE // SPECIAL INVESTIGATION</span>
+                <span class="meta-tag filed">FILED UNDER: FULL-STACK & DEVOPS ARCHIVES</span>
+            </div>
+
+            <div class="broadsheet-hero-grid">
+                
+                <!-- Left Column: Primary Headline, Lead Story & Editorial Narrative -->
+                <article class="hero-story-column">
+                    <div class="case-number">CASE NO. 42 — FINDINGS PUBLISHED</div>
+                    <h2 class="hero-headline">
+                        An engineer who likes building systems — <em>front to back.</em>
+                    </h2>
+
+                    <p class="hero-lead-italic">
+                        Architecting resilient multi-tenant SaaS platforms, on-chain smart contract infrastructure, and high-throughput developer tooling.
+                    </p>
+
+                    <div class="byline-strip">
+                        BY <strong>THE INVESTIGATION DESK</strong> — REPORTING FROM AHMEDABAD, GUJARAT
+                    </div>
+
+                    <div class="hero-action-row">
+                        <a href="#work" class="btn-newspaper-primary">EXAMINE THE EXHIBITS ↓</a>
+                        <a href="#contact" class="btn-newspaper-secondary">FILE INQUIRY</a>
+                    </div>
+
+                    <!-- Editorial Body Copy with Drop Cap -->
+                    <div class="editorial-body">
+                        <p class="editorial-paragraph">
+                            <span class="drop-cap">H</span>i, my name is <strong>Mihir Rathod</strong> — welcome to my personal technical record! I am currently a 3rd-year <strong>Information Technology (IT)</strong> undergraduate at <strong>L.J. University (LJU)</strong> in Ahmedabad. I enjoy building diverse, practical software projects that solve real problems, help streamline daily workflows, and constantly push my engineering craft further across full-stack development, backend systems, and DevOps.
+                        </p>
+                        <p class="editorial-paragraph">
+                            You are completely free to explore all of my documented projects, examine the live deployments, and inspect the code. I'd love to hear your feedback and reviews! If you have an exciting project in mind or want to collaborate and build something impactful together, feel free to <a href="#contact" class="news-inline-link">contact me</a> — let's build! :)
+                        </p>
+                    </div>
+                </article>
+
+                <!-- Right Column: Editorial Halftone Photo -->
+                <aside class="hero-media-column">
+                    <div class="newspaper-photo-frame">
+                        <img src="assets/images/developer_sketch.jpg" alt="Vintage ink sketch illustration of Mihir Rathod coding at his terminal" class="newspaper-photo">
+                        <div class="photo-caption">
+                            <strong>PICTURED:</strong> The developer in his natural habitat, architecting systems at the terminal.
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- SECTION I: SELECTED EXHIBITS & CASE FILES (Robert Tran Layout)        -->
+        <!-- ===================================================================== -->
+        <section id="work" class="newspaper-section">
+            <div class="section-banner">
+                <div class="section-roman">SECTION I</div>
+                <h3 class="section-title">Case Files & Selected Exhibits</h3>
+                <div class="section-sub">DOCUMENTED CASE STUDIES OF SHIPPED PRODUCTION SOFTWARE & DECENTRALIZED PROTOCOLS</div>
+            </div>
+
+            <!-- Robert Tran Style Exhibits Grid: Featured + 3-Column Sub-Grid -->
+            <div class="robert-exhibits-wrapper">
+                
+                <!-- FEATURED BIG EXHIBIT CARD (EXHIBIT A: DINEXA) -->
+                <article class="featured-exhibit-card">
+                    <!-- Left: Taped Browser Frame -->
+                    <div class="taped-preview-box">
+                        <div class="tape-strip"></div>
+                        <div class="preview-frame">
+                            <img src="assets/images/dinexa_sketch.jpg" alt="Dinexa Restaurant Platform illustration" class="preview-img">
+                            <div class="preview-stamp-bar">
+                                <span class="stamp-pill">EXHIBIT A</span>
+                                <span class="recovered-text">recovered from dinexa.in</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Exhibit Narrative & Specs -->
+                    <div class="featured-exhibit-info">
+                        <div class="exhibit-flag-row">
+                            <span class="exhibit-flag">EXHIBIT A</span>
+                            <span class="exhibit-client">CLIENT — DINEXA.IN</span>
+                        </div>
+                        <h4 class="featured-exhibit-title">Dinexa Restaurant Platform</h4>
+                        <p class="featured-exhibit-lead">
+                            An all-in-one multi-tenant platform built for restaurant owners: launch custom branded websites, showcase interactive 3D menus, and manage multi-branch table reservations from a single unified dashboard without third-party commissions.
+                        </p>
+
+                        <!-- Tech Pills -->
+                        <div class="tech-pill-row">
+                            <span class="tech-pill">React</span>
+                            <span class="tech-pill">Node.js</span>
+                            <span class="tech-pill">MongoDB</span>
+                            <span class="tech-pill">3D Menu</span>
+                            <span class="tech-pill">Multi-Tenant SaaS</span>
+                            <span class="tech-pill">Docker</span>
+                        </div>
+
+                        <!-- Card Action Footer -->
+                        <div class="featured-exhibit-footer">
+                            <span class="year-role-text">2026 · Production</span>
+                            <a href="case-file.html?id=dinexa" class="btn-open-case">
+                                OPEN CASE FILE ↵
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 3-COLUMN NEWSPAPER BROADSHEET EXHIBITS ROW -->
+                <div class="exhibits-three-col-grid">
+                    
+                    <!-- EXHIBIT B: LANDLEDGER -->
+                    <article class="col-exhibit-card">
+                        <div class="col-exhibit-header">
+                            <span class="col-exhibit-flag">EXHIBIT B</span>
+                            <span class="col-exhibit-client">LANDLEDGER · LANDLEDGER.ONLINE</span>
+                        </div>
+                        <h5 class="col-exhibit-title">LandLedger Escrow</h5>
+                        
+                        <div class="taped-preview-box small-preview">
+                            <div class="tape-strip"></div>
+                            <div class="preview-frame">
+                                <img src="assets/images/landledger_sketch.jpg" alt="LandLedger blockchain registry sketch" class="preview-img">
+                                <div class="preview-stamp-bar">
+                                    <span class="stamp-pill">EXHIBIT B</span>
+                                    <span class="recovered-text">recovered from landledger.online</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="col-exhibit-desc">
+                            Decentralized land transfer platform eliminating bureaucratic fraud by securing property deeds via an on-chain Rust smart contract escrow on Arbitrum Stylus. Ranked #4 State Blockchain Hackathon.
+                        </p>
+
+                        <div class="tech-pill-row small-pills">
+                            <span class="tech-pill">Rust / Stylus</span>
+                            <span class="tech-pill">React Three Fiber</span>
+                            <span class="tech-pill">Wagmi / Viem</span>
+                        </div>
+
+                        <div class="col-exhibit-footer">
+                            <span class="year-role-text">2026 · State #4</span>
+                            <a href="case-file.html?id=landledger" class="btn-open-case">
+                                OPEN CASE FILE ↵
+                            </a>
+                        </div>
+                    </article>
+
+                    <!-- EXHIBIT C: FORMBUDDY -->
+                    <article class="col-exhibit-card">
+                        <div class="col-exhibit-header">
+                            <span class="col-exhibit-flag">EXHIBIT C</span>
+                            <span class="col-exhibit-client">FORMBUDDY · FORMBUDDY.IN</span>
+                        </div>
+                        <h5 class="col-exhibit-title">FormBuddy Reviews</h5>
+                        
+                        <div class="taped-preview-box small-preview">
+                            <div class="tape-strip"></div>
+                            <div class="preview-frame">
+                                <img src="assets/images/formbuddy_sketch.jpg" alt="FormBuddy customer feedback sketch" class="preview-img">
+                                <div class="preview-stamp-bar">
+                                    <span class="stamp-pill">EXHIBIT C</span>
+                                    <span class="recovered-text">recovered from formbuddy.in</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="col-exhibit-desc">
+                            Multi-tenant customer review platform with instant QR-code point-of-sale review funnels, dynamic forms, sentiment tracking, and real-time manager alerts.
+                        </p>
+
+                        <div class="tech-pill-row small-pills">
+                            <span class="tech-pill">React</span>
+                            <span class="tech-pill">Node.js</span>
+                            <span class="tech-pill">QR Funnels</span>
+                            <span class="tech-pill">Multi-Tenant</span>
+                        </div>
+
+                        <div class="col-exhibit-footer">
+                            <span class="year-role-text">2026 · Solo</span>
+                            <a href="case-file.html?id=formbuddy" class="btn-open-case">
+                                OPEN CASE FILE ↵
+                            </a>
+                        </div>
+                    </article>
+
+                    <!-- EXHIBIT D: LEETCODE COMPANION -->
+                    <article class="col-exhibit-card">
+                        <div class="col-exhibit-header">
+                            <span class="col-exhibit-flag">EXHIBIT D</span>
+                            <span class="col-exhibit-client">LCE · CHROME WEB STORE</span>
+                        </div>
+                        <h5 class="col-exhibit-title">LeetCode Companion</h5>
+                        
+                        <div class="taped-preview-box small-preview">
+                            <div class="tape-strip"></div>
+                            <div class="preview-frame">
+                                <img src="assets/images/leetcode_sketch.jpg" alt="LeetCode Extractor code terminal sketch" class="preview-img">
+                                <div class="preview-stamp-bar">
+                                    <span class="stamp-pill">EXHIBIT D</span>
+                                    <span class="recovered-text">recovered from chrome store</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="col-exhibit-desc">
+                            Chrome developer extension extracting LeetCode problems into paste-ready code stubs with prefilled test runners, ASCII elevation charts, and OCR matrix grids.
+                        </p>
+
+                        <div class="tech-pill-row small-pills">
+                            <span class="tech-pill">Chrome MV3</span>
+                            <span class="tech-pill">Java 21</span>
+                            <span class="tech-pill">Spring Boot</span>
+                            <span class="tech-pill">ASCII Engine</span>
+                        </div>
+
+                        <div class="col-exhibit-footer">
+                            <span class="year-role-text">2026 · Solo</span>
+                            <a href="case-file.html?id=lce" class="btn-open-case">
+                                OPEN CASE FILE ↵
+                            </a>
+                        </div>
+                    </article>
+
+                </div>
+
+                <!-- ALL PROJECTS ARCHIVE CALLOUT BANNER -->
+                <div class="archive-banner-callout">
+                    <div class="archive-banner-content">
+                        <div class="archive-banner-meta">
+                            <span class="stamp-pill">COMPLETE DOSSIER</span>
+                            <span class="archive-count-text">11 REGISTERED TECHNICAL WORKS</span>
+                        </div>
+                        <h4 class="archive-banner-title">Examine the Complete Engineering Archives</h4>
+                        <p class="archive-banner-desc">
+                            Explore all 11 production systems, Arbitrum smart contracts, Django AI platforms, Flask blueprints, and developer tools — ordered from high complexity to foundational.
+                        </p>
+                        <div class="archive-banner-action">
+                            <a href="projects.html" class="btn-newspaper-primary archive-cta-btn">
+                                VIEW COMPLETE ARCHIVES (ALL 11 PROJECTS) →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- INTERACTIVE FULL-SCREEN CASE FILE DOSSIER MODAL (Robert Tran Style)   -->
+        <!-- ===================================================================== -->
+        <div id="case-modal" class="case-dossier-modal hidden" aria-hidden="true" role="dialog" aria-labelledby="modal-case-title">
+            <div class="case-modal-container">
+                
+                <!-- Top Return Bar -->
+                <div class="case-modal-topbar">
+                    <button class="btn-back-case" onclick="closeCaseDossier()">
+                        ← BACK TO THE CASE
+                    </button>
+                    <span class="modal-times-title">THE MIHIR RATHOD GAZETTE // INVESTIGATION CASE FILES</span>
+                    <span class="modal-location">FILED FROM AHMEDABAD</span>
+                </div>
+
+                <!-- Case Header & Hero -->
+                <div class="case-modal-header">
+                    <div id="modal-case-flag" class="modal-flag">CASE FILE — EXHIBIT A · DINEXA.IN</div>
+                    <h2 id="modal-case-title" class="modal-headline">The restaurant platform that manages itself</h2>
+                    <p id="modal-case-lead" class="modal-lead-italic">
+                        An all-in-one multi-tenant platform built for restaurant owners: launch custom branded websites, showcase interactive 3D menus, and manage multi-branch table reservations from a single unified dashboard without third-party commissions.
+                    </p>
+                    <div class="modal-byline">BY <strong>THE INVESTIGATION DESK</strong> · 2026</div>
+                </div>
+
+                <!-- Big Taped Case Photo -->
+                <div class="modal-preview-box">
+                    <div class="tape-strip"></div>
+                    <div class="preview-frame">
+                        <img id="modal-case-img" src="assets/images/dinexa_sketch.jpg" alt="Case study evidence preview" class="modal-img">
+                        <div id="modal-case-caption" class="photo-caption">
+                            <strong>Fig. 1</strong> — The Dinexa visual floor plan & seating builder, open and taking reservations.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2-Column Broadsheet Case Study Article -->
+                <div class="modal-article-grid">
+                    
+                    <!-- Left: Narrative & Deep Engineering Story -->
+                    <div class="modal-story-col">
+                        <div id="modal-case-narrative">
+                            <p class="editorial-paragraph">
+                                <span class="drop-cap">M</span>ost restaurant owners struggle with fragmented digital tools—juggling expensive delivery platforms that take steep commissions, outdated paper menus or static PDF scans, and disconnected reservation apps that keep customer data locked away.
+                            </p>
+                            <p class="editorial-paragraph">
+                                Dinexa solves this by providing a unified multi-tenant platform where restaurants can launch their own custom-branded digital storefront in minutes. Guests enjoy an interactive 3D menu book and direct table booking, while owners manage menus, floor reservations, and customer relationships directly without third-party fees.
+                            </p>
+                            <blockquote id="modal-case-quote" class="modal-pull-quote">
+                                “Built an all-in-one platform allowing restaurant owners to deploy custom websites, interactive 3D menus, and live reservations with zero middlemen.”
+                            </blockquote>
+                            <p class="editorial-paragraph">
+                                Designed for both single-location cafes and multi-branch restaurant brands, the platform provides a centralized management dashboard to track table occupancy, update dishes in real-time across branches, and analyze customer dining trends from one place.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Right: HOW IT WAS BUILT Specification Table -->
+                    <div class="modal-specs-col">
+                        <div class="spec-table-box">
+                            <div class="spec-table-header">HOW IT WAS BUILT</div>
+                            <table class="spec-table">
+                                <tbody>
+                                    <tr>
+                                        <th>FRONT-END</th>
+                                        <td id="modal-spec-frontend">React · Framer Motion · 3D Menu Book · Tailwind</td>
+                                    </tr>
+                                    <tr>
+                                        <th>DATA & AUTH</th>
+                                        <td id="modal-spec-backend">Node.js · Express · MongoDB · JWT Auth</td>
+                                    </tr>
+                                    <tr>
+                                        <th>PLATFORM</th>
+                                        <td id="modal-spec-cache">Multi-Restaurant Management Architecture</td>
+                                    </tr>
+                                    <tr>
+                                        <th>DEVOPS</th>
+                                        <td id="modal-spec-devops">Docker · GitHub Actions CI/CD · Vercel</td>
+                                    </tr>
+                                    <tr>
+                                        <th>ROLE</th>
+                                        <td id="modal-spec-role">Lead Architect & Full-Stack Engineer</td>
+                                    </tr>
+                                    <tr>
+                                        <th>ENTERED</th>
+                                        <td>2026</td>
+                                    </tr>
+                                    <tr>
+                                        <th>STATUS</th>
+                                        <td id="modal-spec-status">Live in Production</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Bottom Modal Actions -->
+                <div class="modal-bottom-actions">
+                    <button class="btn-newspaper-secondary" onclick="closeCaseDossier()">
+                        ← BACK TO THE CASE
+                    </button>
+                    <a id="modal-live-link" href="https://dinexa.in" target="_blank" rel="noopener" class="btn-newspaper-primary">
+                        INSPECT THE EVIDENCE — VISIT LIVE SITE ↗
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ===================================================================== -->
+        <!-- SECTION II: TECHNICAL SYSTEM ARCHITECTURE & ARSENAL (#stack)          -->
+        <!-- ===================================================================== -->
+        <section id="stack" class="newspaper-section">
+            <div class="section-banner">
+                <div class="section-roman">SECTION II</div>
+                <h3 class="section-title">Technical System Architecture & Arsenal</h3>
+                <div class="section-sub">THE DISCIPLINARY STACK: LANGUAGES, RUNTIMES, CLOUD PLATFORMS & SYSTEM PATTERNS</div>
+            </div>
+
+            <div class="systems-broadsheet-grid">
+                
+                <!-- Box 1: Core Programming Languages -->
+                <div class="system-pillar-box">
+                    <div class="pillar-header">01 // LANGUAGES & CORE PROGRAMMING</div>
+                    <ul class="pillar-list">
+                        <li><strong>Java (Core & OOP):</strong> Abstraction, Interfaces, Runtime Polymorphism, Exception Handling, Multithreading, Collections Framework, File I/O, JDBC.</li>
+                        <li><strong>Python:</strong> Python 3.x, Django, Django ORM, Flask, FastAPI, SQLModel, REST API architectures, and automation scripting.</li>
+                        <li><strong>JavaScript / ES6+:</strong> Asynchronous event loops, DOM manipulation, Manifest V3 browser extensions, and Node.js runtimes.</li>
+                        <li><strong>Rust (Web3):</strong> Smart contract engineering on Arbitrum Stylus (EVM-compatible on-chain escrow logic).</li>
+                        <li><strong>Bash & Shell Scripting:</strong> Linux automation, server scripts, and CI/CD workflow automation.</li>
+                    </ul>
+                </div>
+
+                <!-- Box 2: Backend Frameworks & API Architecture -->
+                <div class="system-pillar-box">
+                    <div class="pillar-header">02 // BACKEND FRAMEWORKS & API ARCHITECTURE</div>
+                    <ul class="pillar-list">
+                        <li><strong>Spring Boot (Java):</strong> Layered Controller-Service-Repository-DTO pattern, Spring Security, JWT authentication, Spring Data MongoDB, Lombok.</li>
+                        <li><strong>Testing & API Docs:</strong> JUnit, Mockito, RestTemplate, Swagger / OpenAPI documentation, Postman.</li>
+                        <li><strong>Node.js & Express.js:</strong> RESTful APIs, JWT role isolation, non-blocking async workflows, middleware (Helmet, CORS, rate limiting, sanitization).</li>
+                        <li><strong>Python Frameworks:</strong> Django & Django ORM (e-commerce & streaming), Flask (MVC architecture), FastAPI (high-throughput REST APIs).</li>
+                    </ul>
+                </div>
+
+                <!-- Box 3: Frontend Craft & Motion Systems -->
+                <div class="system-pillar-box">
+                    <div class="pillar-header">03 // FRONTEND CRAFT & INTERACTIVE MOTION</div>
+                    <ul class="pillar-list">
+                        <li><strong>React.js & Vite:</strong> Component architecture, custom hooks, state management with Redux and Context API.</li>
+                        <li><strong>3D & Creative Engineering:</strong> Three.js, React Three Fiber (R3F) for interactive 3D web visualizations.</li>
+                        <li><strong>Motion & Animation Craft:</strong> GSAP & ScrollTrigger, Framer Motion, Lenis smooth scrolling.</li>
+                        <li><strong>Design Systems & UI:</strong> Tailwind CSS, Comic Pop-Art styling, Vanilla CSS, Figma design translation, PWA (Progressive Web Apps).</li>
+                    </ul>
+                </div>
+
+                <!-- Box 4: Databases, Caching & Persistence -->
+                <div class="system-pillar-box">
+                    <div class="pillar-header">04 // DATABASES, CACHING & PERSISTENCE</div>
+                    <ul class="pillar-list">
+                        <li><strong>MongoDB & Atlas:</strong> Schema modeling, Mongoose ODM, aggregation pipelines, connection-pooling optimization under serverless loads.</li>
+                        <li><strong>Relational SQL:</strong> MySQL, PostgreSQL, relational schema design, DDL/DML, index tuning, JDBC connectivity.</li>
+                        <li><strong>Redis (Upstash):</strong> In-memory session store, API rate limiting, DDoS protection layer, and token caching.</li>
+                        <li><strong>Cloud Media Storage:</strong> Cloudinary integration for automated document and media uploads.</li>
+                    </ul>
+                </div>
+
+                <!-- Box 5: DevOps, Cloud & System Reliability -->
+                <div class="system-pillar-box">
+                    <div class="pillar-header">05 // DEVOPS, CLOUD & SYSTEM RELIABILITY</div>
+                    <ul class="pillar-list">
+                        <li><strong>Containerization:</strong> Docker, Docker Compose, multi-stage Alpine builds reducing image footprints.</li>
+                        <li><strong>CI/CD Automation:</strong> GitHub Actions automated build validation, linting, and continuous deployment pipelines.</li>
+                        <li><strong>Cloud & Serverless:</strong> Vercel (serverless functions, maxDuration & timeout tuning, environment config), AWS (Bedrock basics).</li>
+                        <li><strong>Operating Systems & Networking:</strong> Linux (Ubuntu), CLI commands, TCP/IP, DNS, HTTP/HTTPS, ports & firewalls, Google OAuth.</li>
+                        <li><strong>Monitoring & Telemetry:</strong> Serverless cold-start tuning, non-blocking async task queues, basic Prometheus & Grafana metrics.</li>
+                    </ul>
+                </div>
+
+                <!-- Box 6: Algorithms, AI / Vision & Web3 -->
+                <div class="system-pillar-box">
+                    <div class="pillar-header">06 // ALGORITHMS, AI / VISION & WEB3</div>
+                    <ul class="pillar-list">
+                        <li><strong>Data Structures & Algorithms:</strong> 300+ LeetCode problems solved (Arrays, Stacks, Queues, Linked Lists, BST, Heaps, Hashing, DP, Graph Search).</li>
+                        <li><strong>AI, NLP & Computer Vision:</strong> OpenCV image processing, spaCy NLP, TF-IDF cosine similarity, Gemini API & OpenAI GPT integrations.</li>
+                        <li><strong>Web3 & Blockchain:</strong> Rust Arbitrum Stylus smart contracts, Solidity concepts, Wagmi, RainbowKit, MetaMask, Viem sync-on-read verification.</li>
+                        <li><strong>Open Source Leadership:</strong> GirlScript Summer of Code (GSSoC) 2026 — Global Rank #301 out of 43,587 participants.</li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- SECTION III: HACKATHON DISPATCHES & COMPETITIONS (#dossier)           -->
+        <!-- ===================================================================== -->
+        <section id="dossier" class="newspaper-section">
+            <div class="section-banner">
+                <div class="section-roman">SECTION III</div>
+                <h3 class="section-title">Hackathon Dispatches & Competitions</h3>
+                <div class="section-sub">OFFICIAL RECORD OF STATE & NATIONAL HACKATHONS, RESEARCH CONFERENCES & COMPETITIONS</div>
+            </div>
+
+            <div class="hackathon-dispatch-grid">
+                
+                <!-- Entry 1: ISRO Hackathon -->
+                <div class="hackathon-dispatch-card">
+                    <div class="dossier-badge isro-badge">ISRO / HACK2SKILL · 2026</div>
+                    <h4 class="hackathon-card-title">Bharatiya Antariksh Hackathon 2026</h4>
+                </div>
+
+                <!-- Entry 2: State-Level Blockchain Hackathon -->
+                <div class="hackathon-dispatch-card">
+                    <div class="dossier-badge rank-badge">STATE HACKATHON · RANK #4</div>
+                    <h4 class="hackathon-card-title">State-Level Blockchain Hackathon</h4>
+                </div>
+
+                <!-- Entry 3: Google Solution Challenge -->
+                <div class="hackathon-dispatch-card">
+                    <div class="dossier-badge hack-badge">GOOGLE DEVELOPERS · 2026</div>
+                    <h4 class="hackathon-card-title">Google Solution Challenge 2026</h4>
+                </div>
+
+                <!-- Entry 4: DA-IICT Hackathon -->
+                <div class="hackathon-dispatch-card">
+                    <div class="dossier-badge hack-badge">DA-IICT · 2026</div>
+                    <h4 class="hackathon-card-title">DA-IICT Dynamic Pricing Hackathon</h4>
+                </div>
+
+                <!-- Entry 5: IITRAM Hackathon -->
+                <div class="hackathon-dispatch-card">
+                    <div class="dossier-badge hack-badge">IITRAM · 2026</div>
+                    <h4 class="hackathon-card-title">IITRAM Hackathon</h4>
+                </div>
+
+                <!-- Entry 6: Hackovate LJ Hackathon -->
+                <div class="hackathon-dispatch-card">
+                    <div class="dossier-badge hack-badge">LJK UNIVERSITY · 2026</div>
+                    <h4 class="hackathon-card-title">Hackovate LJ Hackathon</h4>
+                </div>
+
+
+                <!-- Entry 8: GSSoC 2026 -->
+                <div class="hackathon-dispatch-card">
+                    <div class="dossier-badge rank-badge">GSSOC 2026 · TOP 1%</div>
+                    <h4 class="hackathon-card-title">GirlScript Summer of Code (GSSoC) 2026</h4>
+                </div>
+
+                <!-- Entry 9: ICRAET-2026 Conference -->
+                <div class="hackathon-dispatch-card">
+                    <div class="dossier-badge conf-badge">RESEARCH CONFERENCE · 2026</div>
+                    <h4 class="hackathon-card-title">ICRAET-2026 International Conference</h4>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- SECTION IV: VERIFIED CREDENTIALS & CERTIFICATIONS (#credentials)      -->
+        <!-- ===================================================================== -->
+        <section id="credentials" class="newspaper-section">
+            <div class="section-banner">
+                <div class="section-roman">SECTION IV</div>
+                <h3 class="section-title">Verified Credentials & Certifications</h3>
+                <div class="section-sub">FORMALLY ISSUED ACCREDITATIONS FROM INDUSTRY LEADERS & TOP UNIVERSITIES</div>
+            </div>
+
+            <div class="credentials-broadsheet-grid">
+                
+                <div class="credential-item">
+                    <div class="credential-issuer">IBM / COURSERA</div>
+                    <h5 class="credential-name">Exploratory Data Analysis for Machine Learning</h5>
+                    <p class="credential-detail">Statistical distributions, data cleaning, feature engineering, and hypothesis testing in Python.</p>
+                </div>
+
+                <div class="credential-item">
+                    <div class="credential-issuer">IBM / COURSERA</div>
+                    <h5 class="credential-name">Developing AI Applications with Python and Flask</h5>
+                    <p class="credential-detail">RESTful AI service deployment, Flask web servers, Watson integration, and microservice APIs.</p>
+                </div>
+
+                <div class="credential-item">
+                    <div class="credential-issuer">UNIVERSITY OF PENNSYLVANIA</div>
+                    <h5 class="credential-name">Inheritance and Data Structures in Java</h5>
+                    <p class="credential-detail">Object-oriented design, generic data structures, memory management, and algorithmic complexity.</p>
+                </div>
+
+                <div class="credential-item">
+                    <div class="credential-issuer">UNIVERSITY OF CALIFORNIA SAN DIEGO</div>
+                    <h5 class="credential-name">Delivery Problem (Algorithmic Graph Optimization)</h5>
+                    <p class="credential-detail">Graph algorithms, Traveling Salesperson Problem heuristics, NP-complete optimization.</p>
+                </div>
+
+                <div class="credential-item">
+                    <div class="credential-issuer">LAMPROS DAO · ARBITRUM</div>
+                    <h5 class="credential-name">Arbitrum Builder Pods Program</h5>
+                    <p class="credential-detail">Showcase demonstration and contract presentation for Arbitrum Stylus Rust smart contracts (Aug 2026).</p>
+                </div>
+
+                <div class="credential-item">
+                    <div class="credential-issuer">LAMPROS DAO & XCAN</div>
+                    <h5 class="credential-name">Web3 & Rust Foundations</h5>
+                    <p class="credential-detail">Rust memory safety, ownership models, cryptographic primitives, and smart contract architecture.</p>
+                </div>
+
+                <div class="credential-item">
+                    <div class="credential-issuer">LEARNQUEST / COURSERA</div>
+                    <h5 class="credential-name">Introduction to Java Programming</h5>
+                    <p class="credential-detail">Java syntax, control structures, OOP fundamentals, exception handling, and standard libraries.</p>
+                </div>
+
+                <div class="credential-item">
+                    <div class="credential-issuer">IBM / COURSERA</div>
+                    <h5 class="credential-name">Introduction to HTML5, CSS3 & JavaScript</h5>
+                    <p class="credential-detail">Semantic HTML, modern CSS layout engines, responsive design, and asynchronous JavaScript.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- SECTION V: OFFICIAL DISPATCH & INQUIRY (#contact)                     -->
+        <!-- ===================================================================== -->
+        <section id="contact" class="newspaper-section contact-section">
+            <div class="section-banner">
+                <div class="section-roman">SECTION V</div>
+                <h3 class="section-title">Official Dispatch & Contact Channels</h3>
+                <div class="section-sub">DIRECT INQUIRY CHANNELS FOR FULL-STACK ENGINEERING ROLES, SAAS COLLABORATIONS & CONSULTING</div>
+            </div>
+
+            <div class="contact-broadsheet-grid">
+                
+                <!-- Left: Editorial Dispatch Information -->
+                <div class="contact-dossier-card">
+                    <div class="contact-card-header">STATION DISPATCH // TRANSMISSION TERMINAL</div>
+                    <h4 class="contact-lead-title">Let’s build resilient, high-uptime software together.</h4>
+                    <p class="contact-body-copy">
+                        Currently available for Full-Stack Software Engineering opportunities, SaaS platform builds, cloud/DevOps automation, and smart contract infrastructure. Based in <strong>Ahmedabad, India</strong> (IST / UTC+5:30) with seamless remote collaboration worldwide.
+                    </p>
+
+                    <div class="verified-channels-list">
+                        <div class="channel-row">
+                            <span class="channel-label">DIRECT EMAIL:</span>
+                            <a href="mailto:rathodmihir1113@gmail.com" class="channel-link">rathodmihir1113@gmail.com ✉</a>
+                        </div>
+                        <div class="channel-row">
+                            <span class="channel-label">LINKEDIN:</span>
+                            <a href="https://www.linkedin.com/in/rathodmihir/" target="_blank" rel="noopener" class="channel-link">linkedin.com/in/rathodmihir ↗</a>
+                        </div>
+                        <div class="channel-row">
+                            <span class="channel-label">GITHUB:</span>
+                            <a href="https://github.com/mihir021" target="_blank" rel="noopener" class="channel-link">github.com/mihir021 ↗</a>
+                        </div>
+                        <div class="channel-row">
+                            <span class="channel-label">LEETCODE:</span>
+                            <a href="https://leetcode.com/u/rathod_mihir/" target="_blank" rel="noopener" class="channel-link">leetcode.com/u/rathod_mihir ↗</a>
+                        </div>
+                        <div class="channel-row">
+                            <span class="channel-label">LIVE SAAS (DINEXA):</span>
+                            <a href="https://dinexa.in" target="_blank" rel="noopener" class="channel-link">dinexa.in ↗</a>
+                        </div>
+                        <div class="channel-row">
+                            <span class="channel-label">LIVE SAAS (FORMBUDDY):</span>
+                            <a href="https://formbuddy.in" target="_blank" rel="noopener" class="channel-link">formbuddy.in ↗</a>
+                        </div>
+                        <div class="channel-row">
+                            <span class="channel-label">CHROME EXTENSION (LCE):</span>
+                            <a href="https://chromewebstore.google.com/detail/lce-%E2%80%94-leetcode-extractor/ghlocdnmgakhaaamfliabdocehkaaipj?authuser=0&hl=en-GB" target="_blank" rel="noopener" class="channel-link">Chrome Web Store ↗</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Newspaper Telegram Inquiry Box -->
+                <div class="telegram-form-card">
+                    <div class="telegram-header">
+                        <span class="telegram-tag">SEND A DIRECT MESSAGE // DISPATCH TERMINAL</span>
+                        <span class="telegram-serial">NO. 849-MR</span>
+                    </div>
+
+                    <form id="portfolio-contact-form" class="newspaper-inquiry-form">
+                        <div class="form-field">
+                            <label for="sender-name" class="field-label">SENDER IDENTIFIER (NAME):</label>
+                            <input type="text" id="sender-name" name="name" class="newspaper-input" placeholder="e.g. Inspector Vance / Engineering Recruiter" autocomplete="name" maxlength="160" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="sender-email" class="field-label">RETURN ADDRESS (EMAIL):</label>
+                            <input type="email" id="sender-email" name="email" class="newspaper-input" placeholder="e.g. name@company.com" autocomplete="email" maxlength="254" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="sender-subject" class="field-label">SUBJECT OF DISPATCH:</label>
+                            <input type="text" id="sender-subject" name="subject" class="newspaper-input" placeholder="e.g. Full-Stack Role / SaaS Project Inquiry" maxlength="160" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="sender-message" class="field-label">TRANSMISSION MESSAGE:</label>
+                            <textarea id="sender-message" name="message" class="newspaper-textarea" rows="4" placeholder="Detail your project or engineering opportunity..." maxlength="5000" required></textarea>
+                        </div>
+                        <div class="form-honeypot" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+                        <button type="submit" id="btn-transmit-dispatch" class="btn-newspaper-primary btn-transmit">
+                            <span class="btn-transmit-text">TRANSMIT DISPATCH →</span>
+                        </button>
+                        <div id="dispatch-status-banner" class="dispatch-status-banner" role="status" aria-live="polite" style="display: none;"></div>
+                    </form>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- NEWSPAPER BROADSHEET FOOTER                                           -->
+        <!-- ===================================================================== -->
+        <footer class="newspaper-footer">
+            <div class="footer-rule-double"></div>
+            
+            <div class="footer-main-row">
+                <!-- Left Column: Brand Info & Direct Email Dispatch Block -->
+                <div class="footer-left-col">
+                    <div class="footer-masthead-title">Mihir Rathod</div>
+                    <div class="footer-masthead-tagline">THE PERSONAL RECORD OF A FULL-STACK SOFTWARE CRAFTSMAN</div>
+                    
+                    <div class="footer-dispatch-block">
+                        <span class="footer-dispatch-label">DIRECT DISPATCH:</span>
+                        <a href="mailto:rathodmihir1113@gmail.com" class="footer-email-link">rathodmihir1113@gmail.com ✉</a>
+                    </div>
+                </div>
+
+                <!-- Right Column: Edition Directory Navigation -->
+                <div class="footer-right-col">
+                    <div class="footer-nav-header">
+                        <span class="footer-nav-label">EDITION DIRECTORY // SECTIONS</span>
+                        <span class="footer-nav-serial">[ 0x05_INDEX ]</span>
+                    </div>
+                    <nav class="footer-nav-grid" aria-label="Footer Edition Directory">
+                        <a href="#work" class="footer-nav-item">EXHIBITS</a>
+                        <a href="#stack" class="footer-nav-item">SYSTEMS</a>
+                        <a href="#dossier" class="footer-nav-item">DISPATCHES</a>
+                        <a href="#credentials" class="footer-nav-item">CREDENTIALS</a>
+                        <a href="#contact" class="footer-nav-item">CONTACT</a>
+                        <a href="projects.html" class="footer-nav-item footer-archive-item">ALL ARCHIVES ↗</a>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="footer-sub-rule"></div>
+
+            <!-- Bottom Colophon Row (Contained width, matching container margin) -->
+            <div class="footer-colophon">
+                <span class="footer-copy">© 2026 MIHIR RATHOD — ALL RIGHTS RESERVED // AHMEDABAD, INDIA</span>
+                <span class="footer-credit">CRAFTED IN BROADSHEET LETTERPRESS & HIGH-PERFORMANCE WEB ARCHITECTURE</span>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Scripts: Modular Architecture -->
+    <script src="js/engine/ascii-grid.js"></script>
+    <script src="js/engine/spider.js"></script>
+    <script src="js/engine/text-animator.js"></script>
+    <script src="js/page-transition.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
