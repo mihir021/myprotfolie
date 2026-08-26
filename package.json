@@ -2,11 +2,6 @@
   "name": "mihir-rathod-portfolio",
   "version": "1.0.0",
   "description": "The Mihir Rathod Times - Official Portfolio & Case Study Archives",
-  "main": "server.py",
-  "scripts": {
-    "dev": "python3 server.py 43210",
-    "start": "python3 server.py 43210"
-  },
   "dependencies": {
     "nodemailer": "^6.9.16"
   }

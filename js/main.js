@@ -291,7 +291,7 @@
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && isIntroActive) {
                 completeLoadingImmediately();
-            } else if (e.key.toLowerCase() === 'r' && !isIntroActive) {
+            } else if (e.key && e.key.toLowerCase() === 'r' && !isIntroActive) {
                 replayIntroSequence();
             }
         });
