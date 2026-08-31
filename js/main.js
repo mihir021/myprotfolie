@@ -287,12 +287,11 @@
             });
         }
 
-        // Keyboard Shortcuts: ESC (Skip), R (Replay)
+        // Keyboard Shortcut: ESC to skip intro sequence during loading
+        // Note: Global 'r' shortcut removed to prevent accidental reloads/replays while browsing or typing
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && isIntroActive) {
                 completeLoadingImmediately();
-            } else if (e.key && e.key.toLowerCase() === 'r' && !isIntroActive) {
-                replayIntroSequence();
             }
         });
     }
