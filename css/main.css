@@ -61,7 +61,7 @@
 }
 
 html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
 }
 
 body {
@@ -132,10 +132,9 @@ body {
     max-width: 1240px;
     margin: 0 auto;
     padding: 16px 28px 80px 28px;
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    
+    /* NOTE: no transform here — a transform on this wrapper would break
+       position: fixed children (the dossier modal) and pinned sections. */
+
     /* Custom Investigative Magnifying Glass Cursor (Authentic Newspaper Ink) */
     cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Ccircle cx='10' cy='10' r='7.5' stroke='%2314151e' stroke-width='2' fill='rgba(255,255,255,0.45)'/%3E%3Cpath d='M15.5 15.5L24 24' stroke='%2314151e' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E") 10 10, auto;
 }
@@ -322,7 +321,7 @@ body {
     border-radius: var(--radius-sm);
     padding: 6px 12px;
     cursor: pointer;
-    transition: all var(--transition-fast);
+    transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast), translate var(--transition-fast);
 }
 
 .news-btn-replay:hover {
@@ -345,7 +344,7 @@ body {
     border-radius: var(--radius-sm);
     padding: 6px 14px;
     box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
-    transition: all var(--transition-fast);
+    transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast), translate var(--transition-fast);
 }
 
 .news-btn-hire:hover {
@@ -353,7 +352,7 @@ body {
     color: var(--ink-primary);
     border-color: var(--ink-primary);
     box-shadow: 3px 3px 0px var(--ink-primary);
-    transform: translateY(-1px);
+    translate: 0 -1px;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -467,14 +466,14 @@ body {
     border: 1px solid var(--ink-primary);
     border-radius: var(--radius-sm);
     box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.15);
-    transition: all var(--transition-fast);
+    transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast), translate var(--transition-fast);
 }
 
 .btn-newspaper-primary:hover {
     background: #ffffff;
     color: var(--ink-primary);
     border-color: var(--ink-primary);
-    transform: translateY(-1px);
+    translate: 0 -1px;
     box-shadow: 3px 3px 0px var(--ink-primary);
 }
 
@@ -492,13 +491,13 @@ body {
     border: 1px solid var(--border-ink);
     border-radius: var(--radius-sm);
     box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.06);
-    transition: all var(--transition-fast);
+    transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast), translate var(--transition-fast);
 }
 
 .btn-newspaper-secondary:hover {
     background: var(--ink-primary);
     color: #ffffff;
-    transform: translateY(-1px);
+    translate: 0 -1px;
 }
 
 /* Editorial Body Copy with Classic Drop Cap */
@@ -997,7 +996,7 @@ body {
     padding: 6px 14px;
     color: var(--ink-primary);
     background: #ffffff;
-    transition: all var(--transition-fast);
+    transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast), translate var(--transition-fast);
 }
 
 .btn-back-case:hover {
@@ -1215,11 +1214,11 @@ body {
     flex-direction: column;
     justify-content: center;
     gap: 8px;
-    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    transition: translate var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .hackathon-dispatch-card:hover {
-    transform: translateY(-2px);
+    translate: 0 -2px;
     box-shadow: 4px 4px 0px var(--border-ink);
 }
 
@@ -1636,7 +1635,7 @@ body {
     border: 1px solid var(--border-subtle);
     border-radius: 2px;
     text-align: center;
-    transition: all var(--transition-fast);
+    transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast), translate var(--transition-fast);
     white-space: nowrap;
 }
 
@@ -1691,11 +1690,11 @@ body {
     background: #fdfbf7;
     padding: 24px;
     box-shadow: 3px 3px 0px rgba(20, 21, 30, 0.08);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: translate 0.2s ease, box-shadow 0.2s ease;
 }
 
 .archive-project-card:hover {
-    transform: translateY(-2px);
+    translate: 0 -2px;
     box-shadow: 5px 5px 0px rgba(179, 38, 30, 0.2);
 }
 
@@ -1785,7 +1784,7 @@ body {
     background: #ffffff;
     padding: 10px;
     box-shadow: 4px 4px 0px rgba(20, 21, 30, 0.08);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: translate 0.2s ease, box-shadow 0.2s ease;
 }
 
 .archive-img-frame:hover {
@@ -1957,7 +1956,7 @@ body {
     background: rgba(20, 21, 30, 0.04);
     border: 1px solid var(--border-ink);
     border-radius: 2px;
-    transition: all var(--transition-fast);
+    transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast), translate var(--transition-fast);
 }
 
 .case-back-link:hover {

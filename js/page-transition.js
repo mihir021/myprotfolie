@@ -1,202 +1,157 @@
 /**
  * ============================================================================
- * PAGE-TRANSITION.JS - SPIDER SPLIT-WALL GATE TRANSITION ENGINE
+ * PAGE-TRANSITION.JS — "Press Run" page transitions + instant prefetch
  * ============================================================================
- * Coordinates the authentic Spider Split-Wall Gate across all pages:
- * 1. Continuous dual-canvas rendering of ASCII matrix + Procedural Spider at 60 FPS.
- * 2. Closes dual split doors (with left & right spider halves) on internal link clicks.
- * 3. On page entry: Pulses laser seam cutter, unlatches, and splits the spider doors wide open.
+ * Leaving:  five newspaper columns drop in one after another, a spider
+ *           abseils to the centre of a fresh web and the next page's name is
+ *           set in type ("Now turning to · The Complete Archive").
+ * Arriving: the cover is already in place at first paint (an inline <head>
+ *           script adds html.is-arriving + the label); the spider climbs out
+ *           and the columns lift away from the centre outward.
+ * Pure CSS transforms → smooth even while the next page is still parsing.
+ * Works with Back/Forward (bfcache) and degrades to a plain navigation
+ * under prefers-reduced-motion.
  */
-
 (function () {
     'use strict';
 
-    let gridLeft = null;
-    let gridRight = null;
-    let spider = null;
-    let animFrameId = null;
-    let lastTime = performance.now();
+    const root = document.documentElement;
+    const curtain = document.getElementById('web-curtain');
+    const NAV_KEY = 'mr_nav';
+    const LABEL_KEY = 'mr_nav_label';
+    const LEAVE_MS = 720;
+    let leaving = false;
 
-    function initSpiderGate() {
-        const gateContainer = document.getElementById('gate-container');
-        const canvasLeft = document.getElementById('canvas-left');
-        const canvasRight = document.getElementById('canvas-right');
-        const mainContent = document.querySelector('.main-content');
-
-        if (!gateContainer || !canvasLeft || !canvasRight) return;
-
-        const isIndex = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname === '';
-
-        // If not on index.html (where main.js handles the render loop), initialize own render loop
-        if (!isIndex && typeof AsciiGrid === 'function' && typeof ProceduralSpider === 'function') {
-            gridLeft = new AsciiGrid(canvasLeft);
-            gridRight = new AsciiGrid(canvasRight);
-            spider = new ProceduralSpider();
-            window.globalSpiderInstance = spider;
-
-            // Lock spider at center for transition stance
-            spider.state = 'locked';
-            spider.x = window.innerWidth / 2;
-            spider.y = window.innerHeight * 0.50;
-            spider.scale = spider.expandedScale || 1.65;
-            spider.gaugeAlpha = 0;
-            spider.swingAngle = 0;
-
-            // Continuous 60 FPS Dual-Canvas Render Loop
-            function transitionRenderLoop(now) {
-                const dt = Math.min(0.05, (now - lastTime) / 1000);
-                lastTime = now;
-
-                spider.x = window.innerWidth / 2;
-                spider.y = window.innerHeight * 0.50;
-                spider.update(dt);
-
-                // Render Left Door Canvas (Clipped to Left 50%)
-                gridLeft.clear();
-                gridLeft.updateBackground(dt);
-                gridLeft.render();
-                spider.render(gridLeft.ctx);
-
-                // Render Right Door Canvas (Clipped to Right 50%)
-                gridRight.clear();
-                gridRight.updateBackground(dt);
-                gridRight.render();
-                spider.render(gridRight.ctx);
-
-                animFrameId = requestAnimationFrame(transitionRenderLoop);
-            }
-
-            animFrameId = requestAnimationFrame(transitionRenderLoop);
-
-            // Handle Resize
-            window.addEventListener('resize', () => {
-                if (gridLeft) gridLeft.resize();
-                if (gridRight) gridRight.resize();
-                if (spider) {
-                    spider.x = window.innerWidth / 2;
-                    spider.y = window.innerHeight * 0.50;
-                }
-            });
-        }
-
-        // Helper: Smoothly and reliably open spider gate doors
-        function openSpiderDoors(initialDelay = 200) {
-            if (!gateContainer) return;
-
-            // Start closed at center with seam laser pulse
-            gateContainer.classList.remove('open-doors', 'unlatched');
-            gateContainer.classList.add('pulse-seam');
-
-            // Trigger mechanical unlatch snap
-            setTimeout(() => {
-                gateContainer.classList.add('unlatched');
-
-                // Glide doors wide open to left & right
-                setTimeout(() => {
-                    gateContainer.classList.add('open-doors');
-                    if (mainContent) {
-                        mainContent.classList.remove('hidden');
-                        mainContent.setAttribute('aria-hidden', 'false');
+    // Static web behind the spider (drawn once)
+    if (curtain) {
+        const g = curtain.querySelector('.wc-web-g');
+        if (g) {
+            let d = '';
+            const N = 14;
+            const ang = [];
+            for (let i = 0; i < N; i++) ang.push((i / N) * Math.PI * 2 + Math.sin(i * 7.3) * 0.08);
+            ang.forEach((a) => { d += `M0 0L${(Math.cos(a) * 104).toFixed(1)} ${(Math.sin(a) * 104).toFixed(1)}`; });
+            let rings = '';
+            for (let r = 14; r < 100; r += 11 + r * 0.06) {
+                let p = '';
+                ang.concat([ang[0] + Math.PI * 2]).forEach((a, i) => {
+                    const x = Math.cos(a) * r, y = Math.sin(a) * r;
+                    if (i === 0) p += `M${x.toFixed(1)} ${y.toFixed(1)}`;
+                    else {
+                        const m = (a + ang[(i - 1) % N] + (i === N ? 0 : 0)) / 2;
+                        const mm = i === N ? (ang[N - 1] + a) / 2 : m;
+                        p += `Q${(Math.cos(mm) * r * 0.9).toFixed(1)} ${(Math.sin(mm) * r * 0.9).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)}`;
                     }
-                    const loaderOverlay = document.getElementById('loader-overlay');
-                    if (loaderOverlay) {
-                        loaderOverlay.classList.add('fade-out');
-                        loaderOverlay.setAttribute('aria-hidden', 'true');
-                    }
-                }, 120);
-            }, initialDelay);
-        }
-
-        // Check navigation state and history return
-        const isNavigating = sessionStorage.getItem('spider_gate_navigating') === 'true';
-        const hasSeenIntro = sessionStorage.getItem('spider_portfolio_seen') === 'true';
-
-        sessionStorage.removeItem('spider_gate_navigating');
-
-        // If on non-index page, or returning to index after having seen intro
-        if (!isIndex || isNavigating || hasSeenIntro) {
-            openSpiderDoors(220);
-        }
-
-        // Handle browser Back/Forward navigation (bfcache restoration)
-        window.addEventListener('pageshow', function (event) {
-            const seen = sessionStorage.getItem('spider_portfolio_seen') === 'true';
-            if (!isIndex || seen || event.persisted) {
-                openSpiderDoors(150);
-            }
-        });
-
-        // Fail-safe Watchdog: Never allow doors to remain stuck in middle
-        setTimeout(() => {
-            if (gateContainer && !gateContainer.classList.contains('open-doors')) {
-                const seen = sessionStorage.getItem('spider_portfolio_seen') === 'true';
-                if (!isIndex || seen) {
-                    gateContainer.classList.add('open-doors');
-                    if (mainContent) mainContent.classList.remove('hidden');
-                }
-            }
-        }, 900);
-
-        // Attach transition listeners to all internal links
-        document.querySelectorAll('a[href]').forEach(link => {
-            const href = link.getAttribute('href');
-            if (!href) return;
-
-            // Skip external links, target="_blank", anchors (#section on same page), mailto/tel
-            if (
-                link.hasAttribute('target') ||
-                href.startsWith('http://') ||
-                href.startsWith('https://') ||
-                href.startsWith('mailto:') ||
-                href.startsWith('tel:') ||
-                (href.startsWith('#') && !href.includes('.html'))
-            ) {
-                return;
-            }
-
-            // Check if it's an internal HTML page link
-            const isInternalPage = (
-                href.includes('.html') ||
-                href === 'index.html' ||
-                href === 'projects.html' ||
-                href.startsWith('case-file.html') ||
-                href.startsWith('projects.html') ||
-                href.startsWith('index.html')
-            );
-
-            if (isInternalPage) {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetUrl = link.href;
-
-                    // Ensure spider is locked at center before closing
-                    if (window.globalSpiderInstance) {
-                        window.globalSpiderInstance.state = 'locked';
-                        window.globalSpiderInstance.x = window.innerWidth / 2;
-                        window.globalSpiderInstance.y = window.innerHeight * 0.50;
-                        window.globalSpiderInstance.scale = window.globalSpiderInstance.expandedScale || 1.65;
-                        window.globalSpiderInstance.gaugeAlpha = 0;
-                        window.globalSpiderInstance.swingAngle = 0;
-                    }
-
-                    // Close the Spider Split-Wall Doors (Slide from edges back to center)
-                    gateContainer.classList.remove('open-doors', 'unlatched');
-                    gateContainer.classList.add('pulse-seam');
-                    sessionStorage.setItem('spider_gate_navigating', 'true');
-                    sessionStorage.setItem('spider_portfolio_seen', 'true');
-
-                    // Navigate after doors meet in center (650ms)
-                    setTimeout(() => {
-                        window.location.href = targetUrl;
-                    }, 650);
                 });
+                rings += p;
             }
-        });
+            g.innerHTML = `<path class="wc-spokes" d="${d}"/><path class="wc-rings" d="${rings}"/>`;
+        }
+        const c = curtain.querySelector('.curtain-spider');
+        if (c && typeof SpiderArt !== 'undefined') {
+            const size = window.innerWidth < 768 ? 96 : 120;
+            const art = new SpiderArt(c, { size, unit: size / 150, anchorY: 0.04, shadow: false, seed: 3, thread: false });
+            art.crouch = 0.15;
+            art.draw();
+        }
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initSpiderGate);
-    } else {
-        initSpiderGate();
+    // Arrival: lift the cover
+    function arrive() {
+        if (!root.classList.contains('is-arriving')) return;
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            root.classList.add('is-arrived');
+            setTimeout(() => {
+                root.classList.remove('is-arriving', 'is-arrived');
+                root.style.removeProperty('--nav-label');
+            }, 1300);
+        }));
     }
+    arrive();
+
+    // bfcache restore (Back/Forward): never show a stuck cover
+    window.addEventListener('pageshow', (e) => {
+        if (e.persisted) {
+            leaving = false;
+            root.classList.remove('is-leaving', 'is-arriving', 'is-arrived');
+        }
+    });
+
+    function isInternalPage(a) {
+        if (!a || !a.href) return false;
+        if (a.target && a.target !== '_self') return false;
+        if (a.hasAttribute('download')) return false;
+        let url;
+        try { url = new URL(a.href, location.href); } catch (e) { return false; }
+        if (url.origin !== location.origin) return false;
+        if (!/\.html$|\/$/.test(url.pathname)) return false;
+        if (url.pathname === location.pathname && url.search === location.search) return false;
+        return true;
+    }
+
+    // Human name for the destination, set as type on the cover
+    function labelFor(url, a) {
+        const u = new URL(url, location.href);
+        const path = u.pathname;
+        if (/projects\.html$/.test(path)) return 'The Complete Archive';
+        if (/case-file\.html$/.test(path)) {
+            const id = u.searchParams.get('id');
+            const data = (window.ALL_CASE_FILES || []).find((c) => c.id === id);
+            if (data) return data.title.split(' — ')[0];
+            const card = a && a.closest('article');
+            const t = card && card.querySelector('h3, h4, h5');
+            return t ? t.textContent.trim() : 'Case File';
+        }
+        if (u.hash && u.hash.length > 1) {
+            const sec = { '#work': 'The Exhibits', '#stack': 'The Systems Desk', '#dossier': 'The Dispatches', '#credentials': 'The Credentials', '#contact': 'The Contact Desk' }[u.hash];
+            if (sec) return sec;
+        }
+        return 'The Front Page';
+    }
+
+    function navigate(url, a, opts = {}) {
+        if (leaving) return;
+        leaving = true;
+        const label = opts.label || labelFor(url, a);
+        try {
+            sessionStorage.setItem(NAV_KEY, '1');
+            sessionStorage.setItem(LABEL_KEY, label);
+        } catch (e) { /* ignore */ }
+        if (!curtain || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            if (opts.back) history.back(); else location.href = url;
+            return;
+        }
+        root.style.setProperty('--nav-label', JSON.stringify(label));
+        root.classList.remove('is-arriving', 'is-arrived');
+        // force style flush so the transition starts from the hidden state
+        void curtain.offsetWidth;
+        root.classList.add('is-leaving');
+        setTimeout(() => { if (opts.back) history.back(); else location.href = url; }, LEAVE_MS);
+    }
+    window.MRNavigate = navigate;
+
+    document.addEventListener('click', (e) => {
+        if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        const a = e.target.closest('a[href]');
+        if (!isInternalPage(a)) return;
+        e.preventDefault();
+        navigate(a.href, a);
+    });
+
+    // Prefetch internal pages on intent (hover / touch) → near-instant loads
+    const prefetched = new Set();
+    function prefetch(e) {
+        const a = e.target.closest && e.target.closest('a[href]');
+        if (!isInternalPage(a)) return;
+        const url = new URL(a.href, location.href);
+        const key = url.pathname + url.search;
+        if (prefetched.has(key)) return;
+        prefetched.add(key);
+        const l = document.createElement('link');
+        l.rel = 'prefetch';
+        l.href = key;
+        document.head.appendChild(l);
+    }
+    document.addEventListener('pointerover', prefetch, { passive: true });
+    document.addEventListener('touchstart', prefetch, { passive: true });
 })();

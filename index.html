@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Mihir Rathod — Full-Stack Engineer & Systems Craftsman. Portfolio featuring multi-tenant SaaS, blockchain infrastructure, AI/ML pipelines, and devops architectures.">
     <title>Mihir Rathod // The Personal Record & Gazette</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 
     <!-- Google Fonts: Newsreader (Editorial Serif), Space Mono (Monospace), Outfit (Sans) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,32 +15,53 @@
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/loader.css">
-    <noscript><style>#gate-container,.loader-overlay,.crt-overlay{display:none!important}.main-content.hidden{display:block!important;opacity:1!important;transform:none!important;pointer-events:auto!important}</style></noscript>
+    <link rel="stylesheet" href="css/lenis.css">
+    <link rel="stylesheet" href="css/motion.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="preload" as="image" href="assets/images/developer_sketch-720.webp" imagesrcset="assets/images/developer_sketch-720.webp 720w, assets/images/developer_sketch.webp 1254w" imagesizes="(max-width: 768px) 92vw, 480px">
+    <!-- First-paint flags: skip the intro if already seen this session, show the arrival curtain -->
+    <script>
+        (function () {
+            var d = document.documentElement;
+            d.classList.add('js');
+            try {
+                var seen = sessionStorage.getItem('mr_intro_seen');
+                var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                if (seen || reduce) d.classList.add('intro-done');
+                if (sessionStorage.getItem('mr_nav')) {
+                    var lbl = sessionStorage.getItem('mr_nav_label'); if (lbl) d.style.setProperty('--nav-label', JSON.stringify(lbl)); sessionStorage.removeItem('mr_nav');
+                    if (seen || reduce) d.classList.add('is-arriving');
+                }
+            } catch (e) { d.classList.add('intro-done'); }
+            setTimeout(function () { d.classList.add('motion-failsafe'); }, 6000);
+        })();
+    </script>
+    <noscript><style>.spider-intro,.web-curtain{display:none!important}[data-hero]{visibility:visible!important}</style></noscript>
 </head>
 <body class="light-mode">
 
     <!-- ========================================================================= -->
-    <!-- SPLIT GATE DOORS: Left Wall & Right Wall (Seamless During Load)            -->
+    <!-- SPIDER INTRO: drop → spin the web → tear it open (js/intro.js)            -->
     <!-- ========================================================================= -->
-    <div id="gate-container" class="gate-container" aria-hidden="true">
-        <!-- Left Wall Door (Holds Left Half of Spider & Background) -->
-        <div id="gate-door-left" class="gate-door left-door">
-            <canvas id="canvas-left" class="door-canvas left-canvas"></canvas>
+    <div id="spider-intro" class="spider-intro" aria-hidden="true">
+        <canvas class="intro-silk"></canvas>
+        <canvas class="intro-spider"></canvas>
+        <div class="intro-hud">
+            <span><span class="hud-long">THE MIHIR RATHOD GAZETTE · </span>SPINNING TODAY'S EDITION <span class="intro-pct" data-intro-pct>00</span>%</span>
+            <button type="button" class="intro-skip">SKIP INTRO<kbd>ESC</kbd></button>
         </div>
+        <p class="intro-caption">Every system starts with a single thread.</p>
+    </div>
 
-        <!-- Right Wall Door (Holds Right Half of Spider & Background) -->
-        <div id="gate-door-right" class="gate-door right-door">
-            <canvas id="canvas-right" class="door-canvas right-canvas"></canvas>
+    <!-- "Press run" page transition: newspaper columns + spider (js/page-transition.js) -->
+    <div id="web-curtain" class="web-curtain" aria-hidden="true">
+        <div class="wc-cols">
+            <span class="wc-col" style="--i:0"></span><span class="wc-col" style="--i:1"></span><span class="wc-col" style="--i:2"></span><span class="wc-col" style="--i:3"></span><span class="wc-col" style="--i:4"></span>
         </div>
-
-        <!-- High-Tech Precision Laser Seam Cut Line -->
-        <div id="gate-center-seam" class="gate-center-seam">
-            <div class="seam-laser-beam"></div>
-            <div class="seam-spark-head top-cutter"></div>
-            <div class="seam-spark-head bottom-cutter"></div>
-            <div class="seam-indicator top-indicator">[ 0x50 // AXIS_SPLIT ]</div>
-            <div class="seam-indicator bottom-indicator">[ UNLATCH_READY ]</div>
+        <div class="wc-center">
+            <svg class="wc-web" viewBox="-110 -110 220 220" aria-hidden="true"><g class="wc-web-g"></g></svg>
+            <div class="wc-spider"><span class="wc-thread"></span><canvas class="curtain-spider"></canvas></div>
+            <div class="curtain-mark"><span class="wc-kicker">NOW TURNING TO</span><strong class="wc-label"></strong><span class="wc-mast">THE MIHIR RATHOD GAZETTE</span></div>
         </div>
     </div>
 
@@ -47,35 +69,12 @@
     <div class="crt-overlay" aria-hidden="true"></div>
 
     <!-- ========================================================================= -->
-    <!-- 1. LOADING SCREEN OVERLAY (HUD: Badge + Skip Button)                       -->
-    <!-- ========================================================================= -->
-    <div id="loader-overlay" class="loader-overlay" role="progressbar" aria-label="System Initializing" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-        
-        <!-- Header Bar: System Tag + Instant Skip Button -->
-        <header class="loader-header">
-            <div class="loader-badge">
-                <span class="badge-dot"></span>
-                <span class="badge-text" id="sys-status-badge">SYS://LOADING</span>
-            </div>
-            <button id="skip-btn" class="skip-btn" title="Skip loading sequence (Press ESC)" aria-label="Skip Intro Animation">
-                <span class="skip-label">SKIP INTRO</span>
-                <span class="skip-key">ESC</span>
-            </button>
-        </header>
-
-        <!-- Center Stage: Reference Anchor -->
-        <main class="loader-center-stage">
-            <div class="spider-stage-anchor" id="spider-stage-anchor"></div>
-        </main>
-    </div>
-
-    <!-- ========================================================================= -->
     <!-- 2. EDITORIAL NEWSPAPER PORTFOLIO (Revealed behind opening split walls)     -->
     <!-- ========================================================================= -->
-    <div id="main-content" class="main-content newspaper-theme hidden" aria-hidden="true">
+    <div id="main-content" class="main-content newspaper-theme">
         
         <!-- Top Editorial Masthead Banner -->
-        <div class="newspaper-top-bar">
+        <div class="newspaper-top-bar" data-hero>
             <span class="news-tag">AHMEDABAD, INDIA</span>
             <span class="news-edition">THE INVESTIGATION EDITION · MARVEL TECH ARCHIVES</span>
             <span class="news-est">EST. 2024 · VOL. IV</span>
@@ -83,11 +82,11 @@
 
         <!-- Classic Editorial Masthead -->
         <header class="newspaper-masthead">
-            <h1 class="masthead-title">Mihir Rathod</h1>
-            <p class="masthead-tagline">THE PERSONAL RECORD OF A FULL-STACK SOFTWARE CRAFTSMAN</p>
+            <h1 class="masthead-title" data-hero>Mihir Rathod</h1>
+            <p class="masthead-tagline" data-hero>THE PERSONAL RECORD OF A FULL-STACK SOFTWARE CRAFTSMAN</p>
 
             <!-- Dateline Strip with Double Rules -->
-            <div class="newspaper-dateline">
+            <div class="newspaper-dateline" data-hero>
                 <div id="dateline-date" class="dateline-item">WEDNESDAY 26 AUGUST 2026</div>
                 <div class="dateline-divider">·</div>
                 <div id="dateline-gssoc" class="dateline-item">GSSOC TOP 1% (#372/47,951)</div>
@@ -99,7 +98,7 @@
         </header>
 
         <!-- Editorial Secondary Sticky Navigation (Pinned across whole page) -->
-        <nav class="newspaper-nav" id="sticky-newspaper-nav">
+        <nav class="newspaper-nav" id="sticky-newspaper-nav" data-hero>
             <div class="nav-brand"><a href="index.html" class="nav-brand-link">Mihir Rathod</a></div>
             <div class="nav-links">
                 <a href="#work" class="news-nav-link">EXHIBITS</a>
@@ -116,7 +115,7 @@
         <!-- ===================================================================== -->
         <section class="newspaper-frontpage">
             
-            <div class="frontpage-meta-bar">
+            <div class="frontpage-meta-bar" data-hero>
                 <span class="meta-tag">FRONT PAGE // SPECIAL INVESTIGATION</span>
                 <span class="meta-tag filed">FILED UNDER: FULL-STACK & DEVOPS ARCHIVES</span>
             </div>
@@ -125,26 +124,26 @@
                 
                 <!-- Left Column: Primary Headline, Lead Story & Editorial Narrative -->
                 <article class="hero-story-column">
-                    <div class="case-number">CASE NO. 42 — FINDINGS PUBLISHED</div>
-                    <h2 class="hero-headline">
+                    <div class="case-number" data-hero>CASE NO. 42 — FINDINGS PUBLISHED</div>
+                    <h2 class="hero-headline" data-hero>
                         An engineer who likes building systems — <em>front to back.</em>
                     </h2>
 
-                    <p class="hero-lead-italic">
+                    <p class="hero-lead-italic" data-hero>
                         Architecting resilient multi-tenant SaaS platforms, on-chain smart contract infrastructure, and high-throughput developer tooling.
                     </p>
 
-                    <div class="byline-strip">
+                    <div class="byline-strip" data-hero>
                         BY <strong>THE INVESTIGATION DESK</strong> — REPORTING FROM AHMEDABAD, GUJARAT
                     </div>
 
-                    <div class="hero-action-row">
+                    <div class="hero-action-row" data-hero>
                         <a href="#work" class="btn-newspaper-primary">EXAMINE THE EXHIBITS ↓</a>
                         <a href="#contact" class="btn-newspaper-secondary">FILE INQUIRY</a>
                     </div>
 
                     <!-- Editorial Body Copy with Drop Cap -->
-                    <div class="editorial-body">
+                    <div class="editorial-body" data-hero>
                         <p class="editorial-paragraph">
                             <span class="drop-cap">H</span>i, my name is <strong>Mihir Rathod</strong> — welcome to my personal technical record! I am currently a 3rd-year <strong>Information Technology (IT)</strong> undergraduate at <strong>L.J. University (LJU)</strong> in Ahmedabad. I enjoy building diverse, practical software projects that solve real problems, help streamline daily workflows, and constantly push my engineering craft further across full-stack development, backend systems, and DevOps.
                         </p>
@@ -156,8 +155,8 @@
 
                 <!-- Right Column: Editorial Halftone Photo -->
                 <aside class="hero-media-column">
-                    <div class="newspaper-photo-frame">
-                        <img src="assets/images/developer_sketch.jpg" alt="Vintage ink sketch illustration of Mihir Rathod coding at his terminal" class="newspaper-photo">
+                    <div class="newspaper-photo-frame" data-hero>
+                        <img src="assets/images/developer_sketch-720.webp" srcset="assets/images/developer_sketch-720.webp 720w, assets/images/developer_sketch.webp 1254w" sizes="(max-width: 768px) 92vw, 480px" width="1254" height="1254" fetchpriority="high" decoding="async" alt="Vintage ink sketch illustration of Mihir Rathod coding at his terminal" class="newspaper-photo">
                         <div class="photo-caption">
                             <strong>PICTURED:</strong> The developer in his natural habitat, architecting systems at the terminal.
                         </div>
@@ -185,7 +184,7 @@
                     <div class="taped-preview-box">
                         <div class="tape-strip"></div>
                         <div class="preview-frame">
-                            <img src="assets/images/dinexa_sketch.jpg" alt="Dinexa Restaurant Platform illustration" class="preview-img">
+                            <img src="assets/images/dinexa_sketch-720.webp" srcset="assets/images/dinexa_sketch-720.webp 720w, assets/images/dinexa_sketch.webp 1376w" sizes="(max-width: 768px) 92vw, 600px" width="1376" height="768" loading="lazy" decoding="async" alt="Dinexa Restaurant Platform illustration" class="preview-img">
                             <div class="preview-stamp-bar">
                                 <span class="stamp-pill">EXHIBIT A</span>
                                 <span class="recovered-text">recovered from dinexa.in</span>
@@ -238,7 +237,7 @@
                         <div class="taped-preview-box small-preview">
                             <div class="tape-strip"></div>
                             <div class="preview-frame">
-                                <img src="assets/images/landledger_sketch.jpg" alt="LandLedger blockchain registry sketch" class="preview-img">
+                                <img src="assets/images/landledger_sketch-720.webp" srcset="assets/images/landledger_sketch-720.webp 720w, assets/images/landledger_sketch.webp 1695w" sizes="(max-width: 768px) 92vw, 600px" width="1376" height="768" loading="lazy" decoding="async" alt="LandLedger blockchain registry sketch" class="preview-img">
                                 <div class="preview-stamp-bar">
                                     <span class="stamp-pill">EXHIBIT B</span>
                                     <span class="recovered-text">recovered from landledger.online</span>
@@ -275,7 +274,7 @@
                         <div class="taped-preview-box small-preview">
                             <div class="tape-strip"></div>
                             <div class="preview-frame">
-                                <img src="assets/images/formbuddy_sketch.jpg" alt="FormBuddy customer feedback sketch" class="preview-img">
+                                <img src="assets/images/formbuddy_sketch-720.webp" srcset="assets/images/formbuddy_sketch-720.webp 720w, assets/images/formbuddy_sketch.webp 1376w" sizes="(max-width: 768px) 92vw, 600px" width="1376" height="768" loading="lazy" decoding="async" alt="FormBuddy customer feedback sketch" class="preview-img">
                                 <div class="preview-stamp-bar">
                                     <span class="stamp-pill">EXHIBIT C</span>
                                     <span class="recovered-text">recovered from formbuddy.in</span>
@@ -313,7 +312,7 @@
                         <div class="taped-preview-box small-preview">
                             <div class="tape-strip"></div>
                             <div class="preview-frame">
-                                <img src="assets/images/leetcode_sketch.jpg" alt="LeetCode Extractor code terminal sketch" class="preview-img">
+                                <img src="assets/images/leetcode_sketch-720.webp" srcset="assets/images/leetcode_sketch-720.webp 720w, assets/images/leetcode_sketch.webp 1376w" sizes="(max-width: 768px) 92vw, 600px" width="1376" height="768" loading="lazy" decoding="async" alt="LeetCode Extractor code terminal sketch" class="preview-img">
                                 <div class="preview-stamp-bar">
                                     <span class="stamp-pill">EXHIBIT D</span>
                                     <span class="recovered-text">recovered from chrome store</span>
@@ -367,7 +366,7 @@
         <!-- INTERACTIVE FULL-SCREEN CASE FILE DOSSIER MODAL (Robert Tran Style)   -->
         <!-- ===================================================================== -->
         <div id="case-modal" class="case-dossier-modal hidden" aria-hidden="true" role="dialog" aria-labelledby="modal-case-title">
-            <div class="case-modal-container">
+            <div class="case-modal-container" data-lenis-prevent>
                 
                 <!-- Top Return Bar -->
                 <div class="case-modal-topbar">
@@ -392,7 +391,7 @@
                 <div class="modal-preview-box">
                     <div class="tape-strip"></div>
                     <div class="preview-frame">
-                        <img id="modal-case-img" src="assets/images/dinexa_sketch.jpg" alt="Case study evidence preview" class="modal-img">
+                        <img id="modal-case-img" src="assets/images/dinexa_sketch.webp" loading="lazy" decoding="async" alt="Case study evidence preview" class="modal-img">
                         <div id="modal-case-caption" class="photo-caption">
                             <strong>Fig. 1</strong> — The Dinexa visual floor plan & seating builder, open and taking reservations.
                         </div>
@@ -556,6 +555,18 @@
 
             </div>
         </section>
+
+        <!-- "EXTRA! EXTRA!" velocity tickers (speed + direction follow your scroll) -->
+        <div class="ticker-band" aria-hidden="true">
+            <div class="news-ticker alt"><div class="ticker-track">
+                <span>Extra! Extra! <b>✶</b> GSSoC 2026 — Top 1% worldwide <b>✶</b> 300+ LeetCode problems solved <b>✶</b> State blockchain hackathon — Rank #4 <b>✶</b> 11 systems shipped <b>✶</b></span>
+                <span>Extra! Extra! <b>✶</b> GSSoC 2026 — Top 1% worldwide <b>✶</b> 300+ LeetCode problems solved <b>✶</b> State blockchain hackathon — Rank #4 <b>✶</b> 11 systems shipped <b>✶</b></span>
+            </div></div>
+            <div class="news-ticker"><div class="ticker-track">
+                <span>Breaking — local engineer spins another web of services <b>✶</b> Full-stack · DevOps · Web3 <b>✶</b> Available for hire <b>✶</b> Filed from Ahmedabad <b>✶</b></span>
+                <span>Breaking — local engineer spins another web of services <b>✶</b> Full-stack · DevOps · Web3 <b>✶</b> Available for hire <b>✶</b> Filed from Ahmedabad <b>✶</b></span>
+            </div></div>
+        </div>
 
         <!-- ===================================================================== -->
         <!-- SECTION III: HACKATHON DISPATCHES & COMPETITIONS (#dossier)           -->
@@ -817,11 +828,17 @@
 
     </div>
 
-    <!-- Scripts: Modular Architecture -->
-    <script src="js/engine/ascii-grid.js"></script>
-    <script src="js/engine/spider.js"></script>
-    <script src="js/engine/text-animator.js"></script>
+    <!-- Scripts: vendor (GSAP + ScrollTrigger + SplitText, Lenis) then site modules -->
+    <script src="js/vendor/gsap.min.js"></script>
+    <script src="js/vendor/ScrollTrigger.min.js"></script>
+    <script src="js/vendor/SplitText.min.js"></script>
+    <script src="js/vendor/lenis.min.js"></script>
+    <script src="js/engine/spider-art.js"></script>
+    <script src="js/engine/silk.js"></script>
     <script src="js/page-transition.js"></script>
+    <script src="js/mobile-nav.js"></script>
+    <script src="js/intro.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/motion.js"></script>
 </body>
 </html>

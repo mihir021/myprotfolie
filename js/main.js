@@ -1,311 +1,23 @@
 /**
  * ============================================================================
- * MAIN.JS - APPLICATION COORDINATOR & SPLIT-WALL GATE CONTROLLER
+ * MAIN.JS - PAGE CONTENT CONTROLLER
  * ============================================================================
- * Orchestrates:
- * 1. Synchronized Dual-Canvas Split Wall Rendering
- * 2. 0% -> 100% Spider Descent & Precision Gauge Fill
- * 3. 100% Trigger: Spider Centers & Expands -> Seam Pulses -> Walls Split in Half
- * 4. Replay: Walls Close back together -> Spider Halves Merge -> Restarts
+ * Dateline, GSSoC rank sync, case dossier modal and the contact form.
  */
 
 (function () {
     'use strict';
 
     // --------------------------------------------------------------------------
-    // DOM ELEMENTS
+    // 1. INITIALIZATION
     // --------------------------------------------------------------------------
-    const gateContainer = document.getElementById('gate-container');
-    const gateDoorLeft = document.getElementById('gate-door-left');
-    const gateDoorRight = document.getElementById('gate-door-right');
-    const canvasLeft = document.getElementById('canvas-left');
-    const canvasRight = document.getElementById('canvas-right');
-    const loaderOverlay = document.getElementById('loader-overlay');
-    const mainContent = document.getElementById('main-content');
-    const skipBtn = document.getElementById('skip-btn');
-    const replayBtn = document.getElementById('replay-btn');
-    const replayCardBtn = document.getElementById('replay-card-btn');
-    const terminalClock = document.getElementById('terminal-clock');
-    const statFps = document.getElementById('stat-fps');
-
-    // --------------------------------------------------------------------------
-    // ENGINE INSTANCES & STATE
-    // --------------------------------------------------------------------------
-    let gridLeft = null;
-    let gridRight = null;
-    let spider = null;
-    let textAnimator = null;
-
-    let isIntroActive = true;
-    let isSplitTriggered = false;
-    let loadingStartTime = null;
-    const TOTAL_LOADING_DURATION = 2500; // 2.5 seconds loading before split sequence
-
-    // Performance & FPS tracking
-    let lastFrameTime = performance.now();
-    let frameCount = 0;
-    let fpsTimer = performance.now();
-
-    // --------------------------------------------------------------------------
-    // 1. INITIALIZATION & LIFECYCLE
-    // --------------------------------------------------------------------------
+    // The intro (js/intro.js), smooth scrolling + scroll effects (js/motion.js)
+    // and page transitions (js/page-transition.js) live in their own modules.
+    // This file only wires up the page content itself.
     function init() {
-        // Initialize dual-door ASCII grids and procedural spider
-        gridLeft = new AsciiGrid(canvasLeft);
-        gridRight = new AsciiGrid(canvasRight);
-        spider = new ProceduralSpider();
-        window.globalSpiderInstance = spider;
-        textAnimator = new TextAnimator();
-
-        // Check if user has already seen intro in this session
-        const hasSeenIntro = sessionStorage.getItem('spider_portfolio_seen');
-
-        if (hasSeenIntro === 'true' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            bypassIntroDirectly();
-        } else {
-            startLoadingSequence();
-        }
-
-        // Attach UI Event Listeners
-        setupEventListeners();
-
-        // Start Live Terminal Clock & Dynamic Dateline Date
-        updateTerminalClock();
-        setInterval(updateTerminalClock, 1000);
         updateDatelineDate();
-
-        // Asynchronously sync GSSoC Rank & Points (2-day interval cache + zero-error safety)
         syncGssocRank();
-
-        // Initialize Telegram Dispatch Contact Form
         initContactDispatchForm();
-
-        // Start unified 60 FPS dual-canvas render loop
-        requestAnimationFrame(animationLoop);
-    }
-
-    /**
-     * Start the loading sequence and ensure doors are closed
-     */
-    function startLoadingSequence() {
-        isIntroActive = true;
-        isSplitTriggered = false;
-        loadingStartTime = performance.now();
-
-        // Reset Spider & Doors
-        spider.reset();
-        gateContainer.classList.remove('open-doors', 'pulse-seam');
-        loaderOverlay.classList.remove('fade-out');
-        mainContent.classList.add('hidden');
-        mainContent.setAttribute('aria-hidden', 'true');
-        loaderOverlay.setAttribute('aria-hidden', 'false');
-
-        // Set spider starting position
-        spider.setProgress(0);
-    }
-
-    /**
-     * Trigger the full Split-Wall Gate Opening sequence
-     */
-    function triggerSplitWallOpening() {
-        if (isSplitTriggered) return;
-        isSplitTriggered = true;
-
-        // Step 1: Lock spider at exact screen center (50% X, 50% Y) and scale up (1000ms)
-        spider.startCenteringAndLock(() => {
-            // Step 2: Fire kinetic laser spark cutters (burst outward from spider to top/bottom)
-            gateContainer.classList.add('pulse-seam');
-
-            // Step 3: When cutters reach screen edges (500ms), trigger mechanical unlatch snap
-            setTimeout(() => {
-                gateContainer.classList.add('unlatched');
-
-                // Step 4: After unlatch impulse (180ms), slide doors wide open
-                setTimeout(() => {
-                    gateContainer.classList.add('open-doors');
-                    loaderOverlay.classList.add('fade-out');
-                    sessionStorage.setItem('spider_portfolio_seen', 'true');
-
-                    // Step 5: Reveal main placeholder content as doors part open
-                    setTimeout(() => {
-                        isIntroActive = false;
-                        mainContent.classList.remove('hidden');
-                        mainContent.setAttribute('aria-hidden', 'false');
-                        loaderOverlay.setAttribute('aria-hidden', 'true');
-                    }, 800);
-                }, 180);
-            }, 500);
-        });
-    }
-
-    /**
-     * Instant Skip function (User clicks skip or presses ESC)
-     */
-    function completeLoadingImmediately() {
-        if (!isIntroActive && isSplitTriggered) return;
-        sessionStorage.setItem('spider_portfolio_seen', 'true');
-        isSplitTriggered = true;
-        isIntroActive = false;
-
-        // Force open doors immediately
-        gateContainer.classList.add('open-doors');
-        loaderOverlay.classList.add('fade-out');
-
-        setTimeout(() => {
-            mainContent.classList.remove('hidden');
-            mainContent.setAttribute('aria-hidden', 'false');
-            loaderOverlay.setAttribute('aria-hidden', 'true');
-        }, 300);
-    }
-
-    /**
-     * Direct bypass for repeat visitors & page transitions
-     */
-    function bypassIntroDirectly() {
-        isIntroActive = false;
-        isSplitTriggered = true;
-        if (spider) {
-            spider.state = 'locked';
-            spider.x = window.innerWidth / 2;
-            spider.y = window.innerHeight * 0.50;
-            spider.scale = spider.expandedScale || 1.65;
-            spider.gaugeAlpha = 0;
-            spider.swingAngle = 0;
-        }
-
-        // Pulse seam, unlatch, and smoothly glide doors open
-        gateContainer.classList.remove('open-doors', 'unlatched');
-        gateContainer.classList.add('pulse-seam');
-
-        setTimeout(() => {
-            gateContainer.classList.add('unlatched');
-            setTimeout(() => {
-                gateContainer.classList.add('open-doors');
-                loaderOverlay.classList.add('fade-out');
-                mainContent.classList.remove('hidden');
-                mainContent.setAttribute('aria-hidden', 'false');
-                loaderOverlay.setAttribute('aria-hidden', 'true');
-            }, 120);
-        }, 220);
-    }
-
-    /**
-     * Smoothly replay intro (Doors close -> halves merge -> reload)
-     */
-    function replayIntroSequence() {
-        mainContent.classList.add('hidden');
-        mainContent.setAttribute('aria-hidden', 'true');
-
-        // Doors slide back together to center (1.8s)
-        gateContainer.classList.remove('open-doors', 'unlatched', 'pulse-seam');
-
-        // Once doors meet in the center, restart sequence
-        setTimeout(() => {
-            startLoadingSequence();
-        }, 1600);
-    }
-
-    // --------------------------------------------------------------------------
-    // 2. TIMELINE & PROGRESS UPDATER
-    // --------------------------------------------------------------------------
-    function updateLoadingProgress(now) {
-        if (!isIntroActive || isSplitTriggered || !loadingStartTime) return;
-
-        const elapsed = now - loadingStartTime;
-        const progressRatio = Math.min(1, elapsed / TOTAL_LOADING_DURATION);
-
-        // Update spider descent & circular gauge
-        spider.setProgress(progressRatio);
-
-        // When loading hits 100%, trigger the split gate transition
-        if (progressRatio >= 1 && !isSplitTriggered) {
-            triggerSplitWallOpening();
-        }
-    }
-
-    // --------------------------------------------------------------------------
-    // 3. SYNCHRONIZED DUAL-CANVAS 60 FPS RENDER LOOP
-    // --------------------------------------------------------------------------
-    function animationLoop(now) {
-        const deltaTime = Math.min(0.05, (now - lastFrameTime) / 1000);
-        lastFrameTime = now;
-
-        // FPS Calculation
-        frameCount++;
-        if (now - fpsTimer >= 1000) {
-            if (statFps) {
-                statFps.textContent = `${frameCount} FPS`;
-            }
-            frameCount = 0;
-            fpsTimer = now;
-        }
-
-        // 1. Update loading timeline if intro is active
-        if (isIntroActive && !isSplitTriggered) {
-            updateLoadingProgress(now);
-        }
-
-        // 2. Update spider kinematics
-        spider.update(deltaTime);
-
-        // 3. Render Left Door Canvas (Clipped to Left 50%)
-        gridLeft.clear();
-        gridLeft.updateBackground(deltaTime);
-        gridLeft.render();
-        spider.render(gridLeft.ctx);
-
-        // 4. Render Right Door Canvas (Clipped to Right 50%)
-        gridRight.clear();
-        gridRight.updateBackground(deltaTime);
-        gridRight.render();
-        spider.render(gridRight.ctx);
-
-        requestAnimationFrame(animationLoop);
-    }
-
-    // --------------------------------------------------------------------------
-    // 4. EVENT LISTENERS & SHORTCUTS
-    // --------------------------------------------------------------------------
-    function setupEventListeners() {
-        // Skip Button Click
-        if (skipBtn) {
-            skipBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                completeLoadingImmediately();
-            });
-        }
-
-        // Replay Button Clicks
-        if (replayBtn) {
-            replayBtn.addEventListener('click', () => {
-                replayIntroSequence();
-            });
-        }
-        if (replayCardBtn) {
-            replayCardBtn.addEventListener('click', () => {
-                replayIntroSequence();
-            });
-        }
-
-        // Keyboard Shortcut: ESC to skip intro sequence during loading
-        // Note: Global 'r' shortcut removed to prevent accidental reloads/replays while browsing or typing
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && isIntroActive) {
-                completeLoadingImmediately();
-            }
-        });
-    }
-
-    /**
-     * Realtime terminal clock readout
-     */
-    function updateTerminalClock() {
-        if (!terminalClock) return;
-        const now = new Date();
-        const hrs = String(now.getHours()).padStart(2, '0');
-        const mins = String(now.getMinutes()).padStart(2, '0');
-        const secs = String(now.getSeconds()).padStart(2, '0');
-        terminalClock.textContent = `${hrs}:${mins}:${secs}`;
     }
 
     // --------------------------------------------------------------------------
@@ -316,7 +28,7 @@
             flag: "CASE FILE — EXHIBIT A · DINEXA.IN",
             title: "Your restaurant, fully alive online",
             lead: "An all-in-one platform engineered for restaurant owners: launch custom branded websites, showcase interactive 3D menus, and manage multi-branch table reservations from a single unified dashboard.",
-            img: "assets/images/dinexa_sketch.jpg",
+            img: "assets/images/dinexa_sketch.webp",
             caption: "Fig. 1 — The Dinexa digital restaurant platform — website builder, 3D menu, and table reservations in production.",
             quote: "“Built an all-in-one platform allowing restaurant owners to deploy custom websites, interactive 3D menus, and live reservations with zero middlemen.”",
             narrative: `
@@ -339,7 +51,7 @@
             flag: "CASE FILE — EXHIBIT B · LANDLEDGER.ONLINE",
             title: "Securing property deeds on Arbitrum Stylus",
             lead: "A decentralized land registry protocol engineered to cut out manual bureaucracy and deed fraud via Rust smart contracts. Awarded Rank #4 statewide.",
-            img: "assets/images/landledger_sketch.jpg",
+            img: "assets/images/landledger_sketch.webp",
             caption: "Fig. 2 — The LandLedger on-chain escrow architecture and 3D LEGO property exploration interface.",
             quote: "“Wrote and deployed the escrow smart contract in Rust on Arbitrum Stylus, enforcing atomic deed transfers with 4-role verification.”",
             narrative: `
@@ -362,7 +74,7 @@
             flag: "CASE FILE — EXHIBIT C · FORMBUDDY.IN",
             title: "Zero-friction point-of-sale customer review intelligence",
             lead: "An all-in-one customer review collection SaaS: generate custom branded QR code stand funnels, capture on-premise customer sentiment, and alert managers in real-time.",
-            img: "assets/images/formbuddy_sketch.jpg",
+            img: "assets/images/formbuddy_sketch.webp",
             caption: "Fig. 3 — The FormBuddy customer review dashboard with QR scan triggers and rating intelligence.",
             quote: "“Built zero-friction QR feedback funnels that capture on-premise customer sentiment and alert managers before negative reviews go public.”",
             narrative: `
@@ -385,7 +97,7 @@
             flag: "CASE FILE — EXHIBIT D · CHROME WEB STORE",
             title: "Instant problem extraction & paste-ready local IDE test stubs",
             lead: "A developer productivity Chrome Extension that extracts any LeetCode problem by number into clean paste-ready code stubs with prefilled test runners, ASCII elevation charts, and OCR matrix grids.",
-            img: "assets/images/leetcode_sketch.jpg",
+            img: "assets/images/leetcode_sketch.webp",
             caption: "Fig. 4 — The LCE Chrome Extension interface with #42 Trapping Rain Water ASCII elevation mapping.",
             quote: "“Engineered language-aware comment formatting with runnable test harnesses and deterministic ASCII elevation charts for seamless local IDE problem solving.”",
             narrative: `
@@ -419,7 +131,7 @@
         document.getElementById('modal-case-flag').textContent = dossier.flag;
         document.getElementById('modal-case-title').textContent = dossier.title;
         document.getElementById('modal-case-lead').textContent = dossier.lead;
-        document.getElementById('modal-case-img').src = dossier.img;
+        document.getElementById('modal-case-img').src = dossier.img.replace(/\.jpg$/, '.webp');
         document.getElementById('modal-case-caption').innerHTML = `<strong>Fig. 1</strong> — ${dossier.caption}`;
         document.getElementById('modal-case-narrative').innerHTML = dossier.narrative;
         
@@ -446,7 +158,7 @@
         if (!modal) return;
         modal.classList.add('hidden');
         modal.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = 'auto';
+        document.body.style.overflow = '';
     };
 
     // Close modal on Escape key

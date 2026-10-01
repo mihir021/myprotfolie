@@ -33,6 +33,20 @@ class PortfolioRequestHandler(http.server.SimpleHTTPRequestHandler):
     Custom HTTP request handler serving static files and routing /api/contact requests.
     """
 
+    # Explicit MIME types so optimised assets are served correctly everywhere
+    # (Windows' registry-based guesses are unreliable for these).
+    extensions_map = {
+        **http.server.SimpleHTTPRequestHandler.extensions_map,
+        ".webp": "image/webp",
+        ".avif": "image/avif",
+        ".woff2": "font/woff2",
+        ".js": "text/javascript",
+        ".mjs": "text/javascript",
+        ".svg": "image/svg+xml",
+        ".css": "text/css",
+        ".json": "application/json",
+    }
+
     def do_POST(self):
         """Handle POST requests for dispatch form submissions."""
         if self.path in ("/api/contact", "/api/send-email"):
@@ -251,9 +265,19 @@ Message:
     print(f"[SUCCESS] Dispatched email from '{name}' <{email}> to <{RECIPIENT_EMAIL}>")
 
 
+class PortfolioServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+    """
+    Threaded server: parallel asset requests (images, fonts, scripts) are served
+    concurrently instead of queueing behind each other. Daemon threads let
+    Ctrl+C exit immediately. (Plain TCPServer base avoids HTTPServer's slow
+    reverse-DNS lookup at startup on Windows.)
+    """
+    daemon_threads = True
+    allow_reuse_address = True
+
+
 if __name__ == "__main__":
-    socketserver.TCPServer.allow_reuse_address = True
-    with socketserver.TCPServer(("", PORT), PortfolioRequestHandler) as httpd:
+    with PortfolioServer(("", PORT), PortfolioRequestHandler) as httpd:
         print(f"=================================================================")
         print(f" THE MIHIR RATHOD TIMES - PORTFOLIO SERVER RUNNING ON PORT {PORT}")
         print(f" Contact API: POST http://localhost:{PORT}/api/contact")

@@ -6,3 +6,6 @@ node_modules/
 __pycache__/
 *.py[cod]
 
+# local tooling / scratch
+.claude_tmp/
+Claude outputs/

@@ -6,32 +6,40 @@
     <title>Case File Dossier — Mihir Rathod Engineering Archives</title>
     <meta name="description" content="Detailed engineering investigation and architectural case study from the Mihir Rathod technical archives.">
     
-    <!-- Google Web Fonts: Playfair Display, Newsreader, Space Mono, Inter -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <!-- Google Web Fonts: Newsreader, Outfit, Space Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,600&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,600;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,600&family=Outfit:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     
     <!-- Main Broadsheet & Loader Stylesheets -->
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/loader.css">
-    <noscript><style>#gate-container,.newsprint-texture-layer{display:none!important}</style></noscript>
+    <link rel="stylesheet" href="css/lenis.css">
+    <link rel="stylesheet" href="css/motion.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <script>
+        (function () {
+            var d = document.documentElement;
+            d.classList.add('js', 'intro-done');
+            try {
+                if (sessionStorage.getItem('mr_nav')) { var lbl = sessionStorage.getItem('mr_nav_label'); if (lbl) d.style.setProperty('--nav-label', JSON.stringify(lbl)); sessionStorage.removeItem('mr_nav'); d.classList.add('is-arriving'); }
+            } catch (e) {}
+            setTimeout(function () { d.classList.add('motion-failsafe'); }, 6000);
+        })();
+    </script>
+    <noscript><style>.web-curtain{display:none!important}[data-hero]{visibility:visible!important}</style></noscript>
 </head>
 <body class="newspaper-body case-study-page">
 
-    <!-- SPLIT GATE DOORS: Left Wall & Right Wall with Spider Dual-Canvas -->
-    <div id="gate-container" class="gate-container" aria-hidden="true">
-        <div id="gate-door-left" class="gate-door left-door">
-            <canvas id="canvas-left" class="door-canvas left-canvas"></canvas>
+    <!-- "Press run" page transition: newspaper columns + spider (js/page-transition.js) -->
+    <div id="web-curtain" class="web-curtain" aria-hidden="true">
+        <div class="wc-cols">
+            <span class="wc-col" style="--i:0"></span><span class="wc-col" style="--i:1"></span><span class="wc-col" style="--i:2"></span><span class="wc-col" style="--i:3"></span><span class="wc-col" style="--i:4"></span>
         </div>
-        <div id="gate-door-right" class="gate-door right-door">
-            <canvas id="canvas-right" class="door-canvas right-canvas"></canvas>
-        </div>
-        <div id="gate-center-seam" class="gate-center-seam">
-            <div class="seam-laser-beam"></div>
-            <div class="seam-spark-head top-cutter"></div>
-            <div class="seam-spark-head bottom-cutter"></div>
-            <div class="seam-indicator top-indicator">[ 0x50 // DOSSIER_TRANSIT ]</div>
-            <div class="seam-indicator bottom-indicator">[ UNLATCH_READY ]</div>
+        <div class="wc-center">
+            <svg class="wc-web" viewBox="-110 -110 220 220" aria-hidden="true"><g class="wc-web-g"></g></svg>
+            <div class="wc-spider"><span class="wc-thread"></span><canvas class="curtain-spider"></canvas></div>
+            <div class="curtain-mark"><span class="wc-kicker">NOW TURNING TO</span><strong class="wc-label"></strong><span class="wc-mast">THE MIHIR RATHOD GAZETTE</span></div>
         </div>
     </div>
 
@@ -41,7 +49,7 @@
     <main class="main-content newspaper-theme case-page-wrapper">
 
         <!-- Top Sticky Navigation Bar -->
-        <header class="case-study-topbar">
+        <header class="case-study-topbar" data-hero>
             <div class="case-top-inner">
                 <a href="javascript:void(0);" id="case-back-btn-top" class="case-back-link">← RETURN</a>
                 <span class="case-publication-title">THE MIHIR RATHOD TIMES · CASE FILES</span>
@@ -51,15 +59,15 @@
 
         <!-- Case Header Section -->
         <section class="case-study-header">
-            <div id="case-flag-tag" class="case-flag-tag">CASE FILE — EXHIBIT 01 · DINEXA.IN</div>
+            <div id="case-flag-tag" class="case-flag-tag" data-hero>CASE FILE — EXHIBIT 01 · DINEXA.IN</div>
             
-            <h1 id="case-headline" class="case-display-headline">The restaurant platform that manages itself</h1>
+            <h1 id="case-headline" class="case-display-headline" data-hero>The restaurant platform that manages itself</h1>
             
-            <p id="case-lead-italic" class="case-sub-lead">
+            <p id="case-lead-italic" class="case-sub-lead" data-hero>
                 A multi-tenant SaaS handed a whole operation, not a brochure: guest accounts behind auth, visual seat-selection floor plans, table reservations, and Redis edge protection.
             </p>
             
-            <div class="case-byline-strip">
+            <div class="case-byline-strip" data-hero>
                 BY <strong>THE INVESTIGATION DESK</strong> — RECORD PUBLISHED 2026
             </div>
         </section>
@@ -67,7 +75,7 @@
         <!-- Center Taped Evidence Illustration Frame -->
         <figure class="case-evidence-frame">
             <div class="case-tape-top"></div>
-            <img id="case-img" src="assets/images/dinexa_sketch.jpg" alt="Case evidence illustration" class="case-evidence-img">
+            <img id="case-img" src="assets/images/dinexa_sketch.webp" width="1376" height="768" decoding="async" alt="Case evidence illustration" class="case-evidence-img">
             <figcaption id="case-caption" class="case-evidence-caption">
                 FIG. 1 — The Dinexa visual floor plan & seating builder, open and taking reservations.
             </figcaption>
@@ -150,10 +158,15 @@
     </main>
 
     <!-- Scripts: Dual-Canvas Spider & Transition Engine -->
-    <script src="js/engine/ascii-grid.js"></script>
-    <script src="js/engine/spider.js"></script>
+    <script src="js/vendor/gsap.min.js"></script>
+    <script src="js/vendor/ScrollTrigger.min.js"></script>
+    <script src="js/vendor/SplitText.min.js"></script>
+    <script src="js/vendor/lenis.min.js"></script>
+    <script src="js/engine/spider-art.js"></script>
+    <script src="js/engine/silk.js"></script>
     <script src="js/case-files-data.js"></script>
     <script src="js/page-transition.js"></script>
+    <script src="js/mobile-nav.js"></script>
     <script>
         (function() {
             // Parse case ID from URL params (e.g. case-file.html?id=dinexa)
@@ -245,25 +258,21 @@
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
 
-                    // Close Spider Split-Wall Doors smoothly
-                    const gateContainer = document.getElementById('gate-container');
-                    if (gateContainer) {
-                        gateContainer.classList.remove('open-doors', 'unlatched');
-                        gateContainer.classList.add('pulse-seam');
+                    const sameSiteBack = window.history.length > 1 && document.referrer && document.referrer.includes(window.location.host);
+                    const backLabel = fallbackTarget.includes('projects') ? 'The Complete Archive' : 'The Exhibits';
+                    if (sameSiteBack && window.MRNavigate) {
+                        window.MRNavigate(document.referrer, null, { back: true, label: backLabel });
+                    } else if (sameSiteBack) {
+                        window.history.back();
+                    } else if (window.MRNavigate) {
+                        window.MRNavigate(fallbackTarget);
+                    } else {
+                        window.location.href = fallbackTarget;
                     }
-                    sessionStorage.setItem('spider_gate_navigating', 'true');
-                    sessionStorage.setItem('spider_portfolio_seen', 'true');
-
-                    setTimeout(() => {
-                        if (window.history.length > 1 && document.referrer && document.referrer.includes(window.location.host)) {
-                            window.history.back();
-                        } else {
-                            window.location.href = fallbackTarget;
-                        }
-                    }, 650);
                 });
             });
         })();
     </script>
+    <script src="js/motion.js"></script>
 </body>
 </html>

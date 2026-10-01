@@ -6,32 +6,40 @@
     <title>All Case Files & Technical Archives — Mihir Rathod</title>
     <meta name="description" content="Complete engineering dossier of all 11 production systems, smart contracts, and developer tools architected by Mihir Rathod.">
     
-    <!-- Google Web Fonts: Playfair Display, Newsreader, Space Mono, Inter -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <!-- Google Web Fonts: Newsreader, Outfit, Space Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,600&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,600;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,600&family=Outfit:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     
     <!-- Main Broadsheet & Loader Stylesheets -->
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/loader.css">
-    <noscript><style>#gate-container,.newsprint-texture-layer{display:none!important}</style></noscript>
+    <link rel="stylesheet" href="css/lenis.css">
+    <link rel="stylesheet" href="css/motion.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <script>
+        (function () {
+            var d = document.documentElement;
+            d.classList.add('js', 'intro-done');
+            try {
+                if (sessionStorage.getItem('mr_nav')) { var lbl = sessionStorage.getItem('mr_nav_label'); if (lbl) d.style.setProperty('--nav-label', JSON.stringify(lbl)); sessionStorage.removeItem('mr_nav'); d.classList.add('is-arriving'); }
+            } catch (e) {}
+            setTimeout(function () { d.classList.add('motion-failsafe'); }, 6000);
+        })();
+    </script>
+    <noscript><style>.web-curtain{display:none!important}[data-hero]{visibility:visible!important}</style></noscript>
 </head>
 <body class="newspaper-body projects-archive-page">
 
-    <!-- SPLIT GATE DOORS: Left Wall & Right Wall with Spider Dual-Canvas -->
-    <div id="gate-container" class="gate-container" aria-hidden="true">
-        <div id="gate-door-left" class="gate-door left-door">
-            <canvas id="canvas-left" class="door-canvas left-canvas"></canvas>
+    <!-- "Press run" page transition: newspaper columns + spider (js/page-transition.js) -->
+    <div id="web-curtain" class="web-curtain" aria-hidden="true">
+        <div class="wc-cols">
+            <span class="wc-col" style="--i:0"></span><span class="wc-col" style="--i:1"></span><span class="wc-col" style="--i:2"></span><span class="wc-col" style="--i:3"></span><span class="wc-col" style="--i:4"></span>
         </div>
-        <div id="gate-door-right" class="gate-door right-door">
-            <canvas id="canvas-right" class="door-canvas right-canvas"></canvas>
-        </div>
-        <div id="gate-center-seam" class="gate-center-seam">
-            <div class="seam-laser-beam"></div>
-            <div class="seam-spark-head top-cutter"></div>
-            <div class="seam-spark-head bottom-cutter"></div>
-            <div class="seam-indicator top-indicator">[ 0x50 // ARCHIVE_TRANSIT ]</div>
-            <div class="seam-indicator bottom-indicator">[ UNLATCH_READY ]</div>
+        <div class="wc-center">
+            <svg class="wc-web" viewBox="-110 -110 220 220" aria-hidden="true"><g class="wc-web-g"></g></svg>
+            <div class="wc-spider"><span class="wc-thread"></span><canvas class="curtain-spider"></canvas></div>
+            <div class="curtain-mark"><span class="wc-kicker">NOW TURNING TO</span><strong class="wc-label"></strong><span class="wc-mast">THE MIHIR RATHOD GAZETTE</span></div>
         </div>
     </div>
 
@@ -41,7 +49,7 @@
     <main class="main-content newspaper-theme">
 
         <!-- Top Editorial Masthead Banner -->
-        <div class="newspaper-top-bar">
+        <div class="newspaper-top-bar" data-hero>
             <span class="news-tag">AHMEDABAD, INDIA</span>
             <span class="news-edition">COMPLETE CASE FILE ARCHIVE · 11 REGISTERED WORKS</span>
             <span class="news-est">EST. 2024 · VOL. IV</span>
@@ -49,11 +57,11 @@
 
         <!-- Classic Editorial Masthead -->
         <header class="newspaper-masthead">
-            <h1 class="masthead-title">Mihir Rathod</h1>
-            <p class="masthead-tagline">THE COMPLETE TECHNICAL RECORD & PROJECT DOSSIER</p>
+            <h1 class="masthead-title" data-hero>Mihir Rathod</h1>
+            <p class="masthead-tagline" data-hero>THE COMPLETE TECHNICAL RECORD & PROJECT DOSSIER</p>
 
             <!-- Dateline Strip with Double Rules -->
-            <div class="newspaper-dateline">
+            <div class="newspaper-dateline" data-hero>
                 <div id="dateline-date" class="dateline-item">WEDNESDAY 26 AUGUST 2026</div>
                 <div class="dateline-divider">·</div>
                 <div class="dateline-item">11 REGISTERED CASE FILES</div>
@@ -65,7 +73,7 @@
         </header>
 
         <!-- Editorial Secondary Sticky Navigation -->
-        <nav class="newspaper-nav" id="sticky-newspaper-nav">
+        <nav class="newspaper-nav" id="sticky-newspaper-nav" data-hero>
             <div class="nav-brand">
                 <a href="index.html" class="nav-brand-link nav-back-brand">← FRONT PAGE</a>
             </div>
@@ -139,10 +147,15 @@
     </main>
 
     <!-- Scripts: Dual-Canvas Spider & Transition Engine -->
-    <script src="js/engine/ascii-grid.js"></script>
-    <script src="js/engine/spider.js"></script>
+    <script src="js/vendor/gsap.min.js"></script>
+    <script src="js/vendor/ScrollTrigger.min.js"></script>
+    <script src="js/vendor/SplitText.min.js"></script>
+    <script src="js/vendor/lenis.min.js"></script>
+    <script src="js/engine/spider-art.js"></script>
+    <script src="js/engine/silk.js"></script>
     <script src="js/case-files-data.js"></script>
     <script src="js/page-transition.js"></script>
+    <script src="js/mobile-nav.js"></script>
     <script>
         (function() {
             // Update Dynamic Date
@@ -176,7 +189,7 @@
                             <a href="case-file.html?id=${item.id}" class="archive-img-link" aria-label="View case file for ${item.title}">
                                 <div class="archive-img-frame">
                                     <div class="tape-strip"></div>
-                                    <img src="${item.img}" alt="${item.title}" class="archive-preview-img" loading="lazy">
+                                    <img src="${item.img.replace('.webp', '-720.webp')}" srcset="${item.img.replace('.webp', '-720.webp')} 720w, ${item.img} 1376w" sizes="(max-width: 768px) 92vw, 520px" width="1376" height="768" alt="${item.title}" class="archive-preview-img" loading="${index < 2 ? 'eager' : 'lazy'}" decoding="async">
                                 </div>
                             </a>
                         </div>` : ''}
@@ -206,5 +219,6 @@
             `).join('');
         })();
     </script>
+    <script src="js/motion.js"></script>
 </body>
 </html>

@@ -1,0 +1,281 @@
+/**
+ * ============================================================================
+ * MOBILE.CSS — phone-first redesign (loaded last on every page)
+ * ============================================================================
+ * Layout idea: a pocket edition of the paper. One-line masthead strip, a big
+ * nameplate, a 2×2 dateline, an "INDEX" menu instead of a squeezed nav,
+ * swipeable exhibit cards, a 2-up dispatch grid and left-aligned body copy.
+ */
+
+/* Mobile index (menu) — markup injected by js/mobile-nav.js */
+.mnav-toggle { display: none; }
+.mnav {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: calc(18px + env(safe-area-inset-top, 0px)) 20px calc(22px + env(safe-area-inset-bottom, 0px));
+    background: var(--bg-newsprint);
+    color: var(--ink-primary);
+    clip-path: inset(0 0 100% 0);
+    visibility: hidden;
+    transition: clip-path 0.55s cubic-bezier(0.76, 0, 0.24, 1), visibility 0s linear 0.55s;
+}
+.mnav.is-open {
+    clip-path: inset(0 0 0 0);
+    visibility: visible;
+    transition: clip-path 0.55s cubic-bezier(0.76, 0, 0.24, 1), visibility 0s;
+}
+.mnav-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 3px double var(--border-ink);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+}
+.mnav-close {
+    font: inherit;
+    letter-spacing: inherit;
+    color: var(--ink-primary);
+    background: transparent;
+    border: 1px solid var(--border-ink);
+    padding: 9px 12px;
+    box-shadow: 2px 2px 0 var(--ink-primary);
+}
+.mnav-list {
+    list-style: none;
+    display: grid;
+    align-content: center;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+}
+.mnav-list a {
+    display: grid;
+    grid-template-columns: 3.2rem 1fr;
+    align-items: baseline;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--ink-primary);
+    text-decoration: none;
+    font-family: var(--font-serif);
+    font-size: clamp(1.9rem, 9vw, 2.6rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.mnav-list a span {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--accent-spider);
+}
+.mnav.is-open .mnav-list a { opacity: 1; transform: none; transition-delay: calc(0.18s + var(--i) * 0.06s); }
+.mnav-foot {
+    display: grid;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    color: var(--ink-secondary);
+}
+.mnav-foot .btn-newspaper-primary { text-align: center; }
+.mnav-spider {
+    position: absolute;
+    right: 34px;
+    top: 0;
+    width: 1px;
+    height: 30vh;
+    background: var(--silk-strong);
+    transform-origin: 50% 0;
+    transform: scaleY(0);
+    transition: transform 0.9s cubic-bezier(0.34, 1.4, 0.64, 1) 0.25s;
+}
+.mnav-spider::after {
+    content: '';
+    position: absolute;
+    left: -13px;
+    bottom: -22px;
+    width: 26px;
+    height: 26px;
+    background: var(--mini-spider) center / contain no-repeat;
+    transform: scaleY(1);
+}
+.mnav.is-open .mnav-spider { transform: scaleY(1); }
+html.mnav-open, html.mnav-open body { overflow: hidden; }
+
+html, body { overflow-x: clip; }
+
+@media (max-width: 768px) {
+    .main-content.newspaper-theme { padding-left: 16px; padding-right: 16px; }
+    .stamp-pill { white-space: nowrap; }
+    .hero-cobweb { opacity: 0.8; }
+
+    /* ---------- masthead ---------- */
+    .newspaper-top-bar {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 4px 0 8px;
+        font-size: 0.56rem;
+        letter-spacing: 0.1em;
+        text-align: left;
+    }
+    .newspaper-top-bar .news-edition { display: none; }
+    .masthead-title {
+        font-size: clamp(3rem, 15.5vw, 4.4rem);
+        letter-spacing: -0.04em;
+        margin: 8px 0 6px;
+    }
+    .masthead-tagline { font-size: 0.56rem; letter-spacing: 0.16em; line-height: 1.6; }
+    .newspaper-dateline {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px 12px;
+        padding: 8px 4px;
+        text-align: center;
+    }
+    .newspaper-dateline .dateline-divider { display: none; }
+    .newspaper-dateline .dateline-item { font-size: 0.56rem; letter-spacing: 0.06em; }
+
+    /* ---------- nav → INDEX button ---------- */
+    html.has-mnav .newspaper-nav .nav-links { display: none; }
+    html.has-mnav .mnav-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        color: var(--bg-newsprint);
+        background: var(--ink-primary);
+        border: 0;
+        padding: 10px 14px;
+    }
+    .mnav-toggle i {
+        display: grid;
+        gap: 3px;
+        width: 14px;
+    }
+    .mnav-toggle i::before, .mnav-toggle i::after {
+        content: '';
+        height: 2px;
+        background: currentColor;
+    }
+    html.has-mnav .newspaper-nav {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 10px 8px 14px;
+        gap: 10px;
+    }
+    .newspaper-nav .nav-brand { font-size: 1.15rem; }
+
+    /* ---------- lead story ---------- */
+    .frontpage-meta-bar .meta-tag.filed { display: none; }
+    .hero-headline { font-size: clamp(2.1rem, 9.6vw, 2.7rem); line-height: 1.04; }
+    .hero-action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .hero-action-row > * { text-align: center; padding-left: 8px; padding-right: 8px; }
+    .editorial-paragraph,
+    .archive-summary-text,
+    .case-narrative-column p { text-align: left; hyphens: auto; }
+    .newspaper-photo-frame { margin-top: 6px; }
+
+    /* ---------- section heads ---------- */
+    .section-title { font-size: clamp(1.75rem, 8.4vw, 2.3rem); line-height: 1.08; text-wrap: balance; }
+    .section-sub { font-size: 0.58rem; }
+
+    /* ---------- exhibits B–D: swipeable cards ---------- */
+    .exhibits-three-col-grid {
+        display: flex;
+        gap: 14px;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x mandatory;
+        margin-left: -16px;
+        margin-right: -16px;
+        padding: 6px 16px 18px;
+        scrollbar-width: none;
+    }
+    .exhibits-three-col-grid::-webkit-scrollbar { display: none; }
+    .exhibits-three-col-grid .col-exhibit-card {
+        flex: 0 0 84%;
+        scroll-snap-align: center;
+        border: 1px solid var(--border-ink);
+        background: var(--bg-news-card);
+        padding: 14px;
+        box-shadow: 3px 3px 0 rgba(20, 21, 30, 0.08);
+    }
+    .swipe-hint {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 22px 0 4px;
+        font-family: var(--font-mono);
+        font-size: 0.6rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        color: var(--ink-muted);
+    }
+    .swipe-dots { display: flex; gap: 6px; }
+    .swipe-dots b {
+        width: 18px;
+        height: 3px;
+        background: var(--border-subtle);
+        transition: background 0.2s ease;
+    }
+    .swipe-dots b.is-on { background: var(--accent-spider); }
+
+    /* ---------- systems (pinned sideways on tall phones) ---------- */
+    #stack.is-horizontal {
+        padding-left: 16px;
+        padding-top: 58px;
+    }
+    #stack.is-horizontal .section-banner { padding-right: 16px; margin-bottom: 12px; }
+    #stack.is-horizontal .section-title { font-size: 1.6rem; }
+    #stack.is-horizontal .section-sub { display: none; }
+    #stack.is-horizontal .web-rule { display: none; }
+    #stack.is-horizontal .systems-broadsheet-grid { gap: 14px; padding-right: 16px; }
+    #stack.is-horizontal .system-pillar-box { flex: 0 0 84vw; padding: 16px; }
+    #stack.is-horizontal .pillar-list li { font-size: 0.86rem; line-height: 1.5; margin-bottom: 8px; }
+    #stack.is-horizontal .h-progress { margin-right: 16px; }
+    #stack.is-horizontal .h-progress-spider { transform: translateX(calc(var(--p) * (100vw - 54px))) rotate(90deg); }
+
+    /* ---------- dispatches: 2-up grid ---------- */
+    .hackathon-dispatch-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .hackathon-dispatch-card { padding: 12px; }
+    .hackathon-card-title { font-size: 0.98rem; line-height: 1.2; }
+    .dossier-badge { font-size: 0.52rem; letter-spacing: 0.04em; white-space: normal; }
+
+    /* ---------- buttons: the spider abseils on tap too ---------- */
+    .btn-newspaper-primary::after, .news-btn-hire::after { display: block; }
+    .btn-newspaper-primary:active::after,
+    .news-btn-hire:active::after { opacity: 1; transform: translateY(14px) scaleY(1); }
+
+    /* ---------- projects archive ---------- */
+    .archive-badge-wrap { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .archive-exhibit-num { margin-left: auto; }
+    .archive-project-title { font-size: 1.45rem; line-height: 1.15; }
+    .projects-archive-page .section-sub { font-size: 0.6rem; line-height: 1.6; }
+
+    /* ---------- case file ---------- */
+    .case-top-inner { flex-direction: row; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+    .case-top-inner .case-location-tag { display: none; }
+    .case-publication-title { font-size: 0.72rem; }
+    .case-display-headline { font-size: clamp(2rem, 9vw, 2.6rem); line-height: 1.05; text-wrap: balance; }
+}
+
+@media (max-width: 359px) {
+    .hackathon-dispatch-grid { grid-template-columns: 1fr; }
+    .hero-action-row { grid-template-columns: 1fr; }
+}
